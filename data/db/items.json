@@ -1,0 +1,20 @@
+{
+  "_설명": "아이템 [제안]. type: key(중요) / consumable(소모) / capsule(아노마리 캡슐) / weapon(무기). price=연.",
+  "생일 케이크": { "type": "key", "desc": "빵집에서 찾아온 생일 케이크." },
+  "지급형 경봉": { "type": "weapon", "desc": "시험장에서 지급하는 기본 무기. 이상구가 아니다.", "attack": 4 },
+  "싸구려 캡슐": {
+    "type": "capsule", "price": 30, "desc": "값싼 아노마리 캡슐. 농도 +15. 부작용이 생길 수 있다.",
+    "concentration": 15, "buff": { "근력": 5, "민첩": 8 }, "sideEffectChance": 0.25,
+    "_TODO": "TODO(미정): 부작용 내용 → 임시로 SP -10"
+  },
+  "일반 캡슐": {
+    "type": "capsule", "price": 120, "desc": "정식 인증 아노마리 캡슐. 농도 +10. 부작용 없음.",
+    "concentration": 10, "buff": { "근력": 6, "민첩": 10 }
+  },
+  "고급 캡슐": {
+    "type": "capsule", "price": 0, "desc": "효과가 가장 강한 아노마리 캡슐. 농도 +20.",
+    "concentration": 20, "buff": { "근력": 10, "민첩": 15 },
+    "_TODO": "TODO(미정): 가격"
+  },
+  "테스트 열쇠": { "type": "key", "desc": "테스트 맵용." }
+}

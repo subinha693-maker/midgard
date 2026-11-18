@@ -26,6 +26,7 @@ export interface MapData {
   w: number;
   h: number;
   indoor: boolean; // true 면 시간대 색조 미적용
+  hospital?: { map: string; x: number; y: number }; // 전투에서 쓰러지면 깨어날 곳
   ground: (string | null)[][];
   objects: (string | null)[][];
   above: boolean[][]; // 캐릭터보다 위에 그릴 물체
@@ -38,6 +39,7 @@ export class MapError extends Error {}
 interface RawMap {
   name?: string;
   indoor?: boolean;
+  hospital?: { map: string; x: number; y: number };
   legend: Record<string, string | LegendEntry>;
   ground: string[];
   objects?: string[];
@@ -105,6 +107,7 @@ export function parseMap(raw: unknown, id: string): MapData {
     w,
     h,
     indoor: !!m.indoor,
+    hospital: m.hospital,
     ground: g.map((r) => r.map((c) => c?.tile ?? null)),
     objects: o.map((r) => r.map((c) => c?.tile ?? null)),
     above,

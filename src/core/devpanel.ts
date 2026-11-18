@@ -3,6 +3,9 @@
 //  - 아무 라벨 바로 실행 / 아무 맵으로 이동
 //  - 플래그·변수·소지금 편집
 import { contentErrors, library, maps } from '../scenario/content';
+import { GROUPS } from './db';
+import { addItem } from './state';
+import { setConcentration } from '../systems/concentration';
 import { game } from './state';
 import type { FieldScene } from '../scenes/FieldScene';
 
@@ -45,6 +48,15 @@ export function mountDevPanel(): void {
       <select id="dv-map">${mapIds.map((m) => `<option ${m === s.map.id ? 'selected' : ''}>${m}</option>`).join('')}</select>
       <input id="dv-xy" placeholder="x,y" value="${s.map.x},${s.map.y}">
       <button id="dv-go">이동</button>
+      <h4>전투 즉시 시작</h4>
+      <select id="dv-group">${Object.keys(GROUPS).map((g) => `<option>${g}</option>`).join('')}</select>
+      <select id="dv-first"><option value="">선제 없음</option><option value="ally">아군 선제 (+10)</option><option value="enemy">적 선제 (+10)</option></select>
+      <button id="dv-battle">전투</button>
+      <h4>발현 농도 · 시간</h4>
+      <input id="dv-conc" type="range" min="0" max="100" step="0.5" value="${s.concentration['클로토'] ?? 0}">
+      <span id="dv-conc-v">${(s.concentration['클로토'] ?? 0).toFixed(1)}</span>
+      <button id="dv-conc-set">농도 적용</button> <button id="dv-time">시간대 넘기기</button> <button id="dv-caps">캡슐 3종 받기</button>
+      <div>지금: ${s.time.day}일차 ${s.time.period}</div>
       <h4>상태 (플래그·변수·소지금·소지품)</h4>
       <textarea id="dv-state" rows="10">${JSON.stringify({ flags: s.flags, vars: s.vars, money: s.money, items: s.items, time: s.time, concentration: s.concentration }, null, 1)}</textarea>
       <button id="dv-apply">적용</button> <button id="dv-refresh">새로 읽기</button>`;
@@ -70,6 +82,27 @@ export function mountDevPanel(): void {
       }
     };
     $('dv-refresh').onclick = render;
+    $('dv-battle').onclick = () => {
+      const f = field();
+      if (!f || f.busy) return alert('필드에서, 원고 실행 중이 아닐 때');
+      const first = ($('dv-first').value || null) as 'ally' | 'enemy' | null;
+      void f.battle($('dv-group').value, undefined, first);
+    };
+    $('dv-conc').oninput = () => ($('dv-conc-v').textContent = Number($('dv-conc').value).toFixed(1));
+    $('dv-conc-set').onclick = () => {
+      if (setConcentration(game.state, '클로토', Number($('dv-conc').value))) void field()?.gameOver();
+      render();
+    };
+    $('dv-time').onclick = () => {
+      const f = field();
+      if (!f) return;
+      void f.runScriptText('@time next');
+      setTimeout(render, 300);
+    };
+    $('dv-caps').onclick = () => {
+      for (const n of ['싸구려 캡슐', '일반 캡슐', '고급 캡슐']) addItem(game.state, n, 1);
+      render();
+    };
   };
   if (contentErrors.length) {
     console.warn('[미드가르드] 원고·맵 오류', contentErrors);

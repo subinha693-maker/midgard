@@ -1,5 +1,6 @@
 // 게임 상태: 플래그·변수·소지금·소지품·파티·퀘스트·위치·시간
 // 화면과 분리된 순수 데이터. 저장 파일은 이 객체를 그대로 직렬화한다.
+import { ACTORS, statsAt } from './db';
 
 export type Dir = 'down' | 'left' | 'right' | 'up';
 export type Period = '아침' | '낮' | '저녁' | '밤';
@@ -10,12 +11,21 @@ export interface QuestState {
   objective: string;
 }
 
+export interface ActorState {
+  level: number;
+  exp: number;
+  hp: number;
+  sp: number;
+  weapon: string | null;
+}
+
 export interface GameState {
   flags: Record<string, boolean>;
   vars: Record<string, number>;
   money: number;
   items: Record<string, number>;
   party: string[];
+  actors: Record<string, ActorState>;
   quests: Record<string, QuestState>;
   questOrder: string[];
   map: { id: string; x: number; y: number; dir: Dir };
@@ -33,6 +43,7 @@ export function newState(): GameState {
     money: 0,
     items: {},
     party: ['클로토'],
+    actors: Object.fromEntries(Object.entries(ACTORS).map(([k, d]) => [k, newActor(k, d.level)])),
     quests: {},
     questOrder: [],
     map: { id: '', x: 0, y: 0, dir: 'down' },
@@ -63,4 +74,15 @@ export function setQuest(s: GameState, id: string, action: '시작' | '목표' |
   if (action === '완료') q.status = 'done';
   else q.status = q.status === 'done' && action === '목표' ? 'done' : 'active';
   if (text !== undefined) q.objective = text;
+}
+
+export function newActor(id: string, level: number): ActorState {
+  const st = statsAt(ACTORS[id], level);
+  return { level, exp: 0, hp: st.hp, sp: st.sp, weapon: null };
+}
+
+/** 소지품에 무기가 들어오면 비어 있는 손에 자동 장비 [제안] */
+export function autoEquip(s: GameState, item: string, isWeapon: boolean): void {
+  if (!isWeapon) return;
+  for (const id of s.party) if (s.actors[id] && !s.actors[id].weapon) s.actors[id].weapon = item;
 }

@@ -2,13 +2,14 @@
 // 화면 일은 Host(필드 장면)에 맡기고, 흐름 제어(@if·@goto·@call·선택지)와 상태 명령은 여기서 처리한다.
 import type { Cmd, Node, ScriptLibrary } from './parser';
 import { evaluate } from './cond';
-import { addItem, game, PERIODS, setQuest } from '../core/state';
+import { addItem, autoEquip, game, PERIODS, setQuest } from '../core/state';
+import { ITEMS } from '../core/db';
 
 export interface Host {
   say(speaker: string | undefined, expr: string | undefined, side: 'left' | 'right' | undefined, text: string): Promise<void>;
   choose(options: string[]): Promise<number>;
   /** 화면·연출 명령 (map, move, fade …). 모르는 명령은 무시해도 된다 */
-  command(cmd: Cmd): Promise<void>;
+  command(cmd: Cmd): Promise<void | { goto: string }>;
   /** 시간대가 바뀔 때 (농도 감소 등, P3) */
   onTimeAdvance?(steps: number): void;
   warn?(msg: string): void;
@@ -21,6 +22,8 @@ class Stop {}
 class Return {}
 
 const MAX_JUMPS = 10000; // 무한 @goto 방지
+/** 화면 쪽 명령이 실행을 끝내고 싶을 때 (게임 오버 등) */
+export const STOP_LABEL = '__stop';
 
 export class Runner {
   running = false;
@@ -33,7 +36,7 @@ export class Runner {
     this.jumps = 0;
     try {
       let next: string | null = label;
-      while (next) {
+      while (next && next !== STOP_LABEL) {
         next = await this.runLabel(next);
       }
     } finally {
@@ -63,6 +66,7 @@ export class Runner {
   private async call(name: string): Promise<void> {
     let next: string | null = name;
     while (next) {
+      if (next === STOP_LABEL) throw new Stop();
       const label = this.lib.labels.get(next);
       if (!label) {
         this.host.warn?.(`없는 라벨: ${next}`);
@@ -140,7 +144,9 @@ export class Runner {
         const last = a[a.length - 1];
         const hasN = /^[+-]\d+$/.test(last);
         const name = (hasN ? a.slice(0, -1) : a).join(' ');
-        addItem(s, name, hasN ? Number(last) : 1);
+        const n = hasN ? Number(last) : 1;
+        addItem(s, name, n);
+        if (n > 0) autoEquip(s, name, ITEMS[name]?.type === 'weapon');
         return;
       }
       case 'quest': {
@@ -169,8 +175,10 @@ export class Runner {
       case 'speed':
         s.playerSpeed = Number(a[0] ?? 1) || 1;
         return;
-      default:
-        await this.host.command(c);
+      default: {
+        const r = await this.host.command(c);
+        if (r && r.goto) throw new Jump(r.goto);
+      }
     }
   }
 

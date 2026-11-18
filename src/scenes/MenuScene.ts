@@ -4,6 +4,9 @@ import { DISPLAY } from '../config/display';
 import { allSlots, readSave, writeSave, type Slot } from '../core/save';
 import { saveSettings, settings } from '../core/settings';
 import { game } from '../core/state';
+import { ACTORS, ITEMS, QUESTS, statsAt } from '../core/db';
+import { stageOf } from '../systems/concentration';
+import { canUse, useItem } from '../systems/inventory';
 import { blocker, button, COLORS, panel, text } from '../ui/widgets';
 import type { FieldScene } from './FieldScene';
 import type { HudScene } from './HudScene';
@@ -78,36 +81,54 @@ export class MenuScene extends Phaser.Scene {
       const p = this.clear('소지품');
       const list = Object.entries(s.items);
       if (!list.length) this.line(p.x, p.y, '아무것도 없다.', 22, COLORS.dim);
-      list.forEach(([n, c], i) => this.line(p.x, p.y + i * 40, `${n}  ×${c}`));
+      list.forEach(([n, c], i) => {
+        const y = p.y + i * 74;
+        this.line(p.x, y, `${n}  ×${c}`, 22, COLORS.text);
+        this.line(p.x, y + 30, ITEMS[n]?.desc ?? '', 18, COLORS.dim);
+        if (canUse(n)) {
+          const b = button(this, W - 190, y, 140, 56, '사용', () => this.useFromMenu(n), 22);
+          this.body.add(b);
+        }
+      });
       this.line(p.x, H - 90, `소지금  ${s.money.toLocaleString()}연`, 22, COLORS.accent);
     } else if (page === 'status') {
       const p = this.clear('상태');
-      const rows = [
-        `${s.party.join(', ')}`,
-        `소지금  ${s.money.toLocaleString()}연`,
-        `${s.time.day}일차 · ${s.time.period}`,
-        `혈중 발현 농도  ${(s.concentration['클로토'] ?? 0).toFixed(1)} mg/dL`,
-        '(능력치·전투 정보는 P3에서 추가)',
-      ];
-      rows.forEach((r, i) => this.line(p.x, p.y + i * 44, r, 22, i === 4 ? COLORS.dim : COLORS.text));
+      let y = p.y;
+      for (const id of s.party) {
+        const def = ACTORS[id];
+        const st = s.actors[id];
+        if (!def || !st) continue;
+        const ns = statsAt(def, st.level);
+        const next = def.expToNext[st.level];
+        this.line(p.x, y, `${def.name}   Lv ${st.level}   경험치 ${st.exp}${next !== undefined ? ` / ${next}` : ''}`, 24, COLORS.accent);
+        this.line(p.x, y + 40, `HP ${st.hp}/${ns.hp}    SP ${st.sp}/${ns.sp}${st.sp <= 0 ? '  [패닉]' : ''}`);
+        this.line(p.x, y + 76, `근력 ${ns['근력']}   민첩 ${ns['민첩']}   감각 ${ns['감각']}   화술 ${ns['화술']}   의지 ${ns['의지']}`);
+        this.line(p.x, y + 112, `무기  ${st.weapon ?? '없음'}${st.weapon && ITEMS[st.weapon]?.attack ? ` (공격력 +${ITEMS[st.weapon].attack})` : ''}`);
+        const c = s.concentration[id] ?? 0;
+        this.line(p.x, y + 148, `혈중 발현 농도  ${c.toFixed(1)} mg/dL  — ${stageOf(c)}`, 22, c >= 40 ? '#e57373' : COLORS.text);
+        y += 200;
+      }
+      this.line(p.x, y, `소지금 ${s.money.toLocaleString()}연   ·   ${s.time.day}일차 ${s.time.period}`, 22, COLORS.dim);
     } else if (page === 'notebook') {
-      const p = this.clear('클로토의 수첩 — 퀘스트');
+      const p = this.clear('클로토의 수첩');
       // 단서·인물·도감 탭은 자리만 (비활성)
-      ['단서', '인물', '도감'].forEach((t, i) => this.line(W - 300 + i * 90, 46, t, 20, '#5d5a52'));
+      ['퀘스트', '단서', '인물', '도감'].forEach((t, i) => this.line(W - 400 + i * 90, 46, t, 20, i === 0 ? COLORS.accent : '#5d5a52'));
       let y = p.y;
       const active = s.questOrder.filter((id) => s.quests[id].status === 'active');
       const done = s.questOrder.filter((id) => s.quests[id].status === 'done');
       if (!active.length && !done.length) this.line(p.x, y, '아직 기록이 없다.', 22, COLORS.dim);
       for (const id of active) {
-        this.line(p.x, y, `▶ ${id}`, 24, COLORS.accent);
-        this.line(p.x + 30, y + 34, s.quests[id].objective || '…');
-        y += 84;
+        const q = QUESTS[id];
+        this.line(p.x, y, `▶ ${id}  ${q?.title ?? ''}`, 24, COLORS.accent);
+        if (q?.desc) this.line(p.x + 30, y + 34, q.desc, 18, COLORS.dim);
+        this.line(p.x + 30, y + (q?.desc ? 62 : 34), `목표: ${s.quests[id].objective || '…'}`, 20);
+        y += q?.desc ? 104 : 80;
       }
       if (done.length) {
         this.line(p.x, y + 8, '완료', 20, COLORS.dim);
         y += 44;
         for (const id of done) {
-          this.line(p.x, y, `✓ ${id}`, 22, COLORS.dim);
+          this.line(p.x, y, `✓ ${id}  ${QUESTS[id]?.title ?? ''}`, 22, COLORS.dim);
           y += 38;
         }
       }
@@ -142,6 +163,19 @@ export class MenuScene extends Phaser.Scene {
       toggle(p.y + 80, '메뉴에서 저장 (개발용)', () => settings.menuSave, (v) => (settings.menuSave = v));
       this.line(p.x, p.y + 170, '키보드: 방향키 이동 · Z 조사/넘기기 · X 메뉴 · Shift 빨리 넘기기', 20, COLORS.dim);
     }
+  }
+
+  private useFromMenu(name: string): void {
+    const r = useItem(game.state, name, '클로토', null);
+    (this.scene.get('Hud') as HudScene)?.showToast(r.messages.join('  '), 2600);
+    if (r.anomalized) {
+      const field = this.scene.get('Field') as FieldScene;
+      this.scene.stop();
+      field.menuOpen = false;
+      void field.gameOver();
+      return;
+    }
+    this.show('items');
   }
 
   private doSave(sl: Slot): void {

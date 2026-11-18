@@ -42,6 +42,7 @@ export function migrate(raw: unknown): SaveFile | null {
   st.map = { ...base.map, ...(f.state.map ?? {}) };
   st.time = { ...base.time, ...(f.state.time ?? {}) };
   st.concentration = { ...base.concentration, ...(f.state.concentration ?? {}) };
+  st.actors = { ...base.actors, ...(f.state.actors ?? {}) };
   // (버전별 변환은 여기에 추가: if (f.version < 2) { … })
   return { version: SAVE_VERSION, savedAt: f.savedAt ?? '', summary: f.summary ?? '', state: st };
 }

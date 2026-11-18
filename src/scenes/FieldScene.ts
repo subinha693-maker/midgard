@@ -6,6 +6,10 @@ import { SAVE } from '../config/save';
 import { TIME_TINT } from '../config/time';
 import { devWarn, DEBUG } from '../core/debug';
 import { writeSave } from '../core/save';
+import { ACTORS, GROUPS, statsAt } from '../core/db';
+import { addConcentration, decayConcentration, setConcentration } from '../systems/concentration';
+import { hospitalFee } from '../systems/battle/core';
+import type { BattleResult } from './BattleScene';
 import { game, type Dir } from '../core/state';
 import { TILE_INDEX } from '../core/tiles';
 import { CharSprite, DIR_VEC } from '../field/CharSprite';
@@ -237,6 +241,13 @@ export class FieldScene extends Phaser.Scene implements Host {
 
   get busy(): boolean {
     return this.runner.running || this.menuOpen || this.transferring;
+  }
+
+  /** 개발용: 원고 몇 줄을 바로 실행 */
+  async runScriptText(src: string): Promise<void> {
+    library.add(`# __dev\n${src}\n`, '__dev');
+    await this.runScript('__dev');
+    library.labels.delete('__dev');
   }
 
   async runScript(label: string): Promise<void> {
@@ -494,9 +505,84 @@ export class FieldScene extends Phaser.Scene implements Host {
     devWarn(msg);
   }
 
-  onTimeAdvance(): void {
-    // 시간대 색조 갱신 (농도 감소는 P3에서 연결)
+  onTimeAdvance(steps: number): void {
+    const before = game.state.time.day;
+    decayConcentration(game.state, steps); // 클로토만 가라앉음 (actors.json concentrationDecay)
     this.applyTimeTint();
+    // 7일마다 방세 처리용 훅 — 방세 자체는 M06 이후
+    const s = game.state;
+    if (s.time.day !== before && (s.time.day - 1) % 7 === 0) this.events.emit('weekly', s.time.day);
+    void before;
+  }
+
+  /** 전투 한 판 (재시험·병원 처리 포함). 못 이기는 전투에서 지면 라벨을 돌려준다 */
+  async battle(group: string, loseLabel?: string, firstStrike: 'ally' | 'enemy' | null = null): Promise<{ goto: string } | void> {
+    const g = GROUPS[group];
+    if (!g) {
+      devWarn('없는 전투 그룹:', group);
+      return;
+    }
+    this.ui.hud.setControlsVisible(false);
+    for (;;) {
+      await this.ui.cg.fade('out', 0.3);
+      const r = await new Promise<BattleResult>((res) => {
+        this.scene.launch('Battle', { group, firstStrike, canEscape: !g.retry && !g.scriptedLoss, onEnd: res });
+        this.scene.bringToTop('Battle');
+      });
+      game.state.vars['전투결과'] = r === 'win' ? 1 : r === 'escape' ? 2 : 0;
+      if (r === 'anomalized') {
+        await this.gameOver();
+        return { goto: '__stop' };
+      }
+      if (r === 'lose') {
+        const label = loseLabel ?? g.scriptedLoss;
+        if (label) {
+          this.restoreParty();
+          await this.ui.cg.fade('in', 0.3);
+          return { goto: label };
+        }
+        if (g.retry) {
+          // 프롤로그 시험 전투: 지면 재시험
+          this.restoreParty();
+          await this.ui.cg.fade('in', 0.3);
+          await this.say(undefined, undefined, undefined, '쓰러졌다… 재시험을 본다.');
+          firstStrike = null;
+          continue;
+        }
+        // 게임 오버가 아니라 근처 병원에서 깨어나고 돈만 잃는다 [확정]
+        const fee = hospitalFee(game.state.money);
+        game.state.money -= fee;
+        this.restoreParty();
+        const h = this.map.hospital;
+        if (h) this.loadMap(h.map, h.x, h.y, 'down');
+        await this.ui.cg.fade('in', 0.6);
+        await this.say(undefined, undefined, undefined, `병원에서 눈을 떴다. 치료비로 ${fee}연을 냈다.`);
+        return;
+      }
+      await this.ui.cg.fade('in', 0.3);
+      return;
+    }
+  }
+
+  private restoreParty(): void {
+    for (const id of game.state.party) {
+      const st = game.state.actors[id];
+      const def = ACTORS[id];
+      if (st && def) {
+        const ns = statsAt(def, st.level);
+        st.hp = ns.hp;
+        st.sp = ns.sp;
+      }
+    }
+  }
+
+  /** 발현 농도 100 → 이상체화 → 게임 오버(배드엔딩) [확정] */
+  async gameOver(): Promise<void> {
+    this.ui.dlg.close();
+    await this.ui.cg.fade('out', 1.2, 0x000000);
+    await this.ui.dlg.subtitle('혈중 발현 농도 100.0 mg/dL', 2.5);
+    await this.ui.dlg.subtitle('— 배드 엔딩 —', 2.5);
+    this.toTitle();
   }
 
   wait(sec: number): Promise<void> {
@@ -510,7 +596,7 @@ export class FieldScene extends Phaser.Scene implements Host {
     return n?.ch ?? null;
   }
 
-  async command(c: Cmd): Promise<void> {
+  async command(c: Cmd): Promise<void | { goto: string }> {
     const a = c.args;
     switch (c.name) {
       case 'map': {
@@ -636,16 +722,22 @@ export class FieldScene extends Phaser.Scene implements Host {
         this.applyTimeTint();
         return;
       case 'concentration': {
-        // @concentration 클로토 +10 (효과·게임 오버는 P3)
+        // @concentration 클로토 +10 | =0
         const who = a[0] ?? '클로토';
-        const cur = game.state.concentration[who] ?? 0;
-        const v = a[1]?.startsWith('=') ? Number(a[1].slice(1)) : cur + Number(a[1] ?? 0);
-        game.state.concentration[who] = Math.round(Phaser.Math.Clamp(v, 0, 100) * 10) / 10;
+        const hit = a[1]?.startsWith('=') ? setConcentration(game.state, who, Number(a[1].slice(1))) : addConcentration(game.state, who, Number(a[1] ?? 0));
+        if (hit && who === '클로토') {
+          await this.gameOver();
+          return { goto: '__stop' };
+        }
         return;
       }
-      case 'battle':
-        devWarn('@battle 은 P3에서 구현 — 지금은 이긴 것으로 넘어감:', c.raw);
-        return;
+      case 'battle': {
+        // @battle 그룹 [패배라벨] [선제:아군|적]
+        const fs = a.find((x) => x.startsWith('선제:'));
+        const lose = a.slice(1).find((x) => !x.startsWith('선제:'));
+        const side = fs === '선제:아군' ? 'ally' : fs === '선제:적' ? 'enemy' : null;
+        return this.battle(a[0], lose, side);
+      }
       case 'save':
         this.menuOpen = true;
         this.scene.launch('Menu', { page: 'save', force: true });
