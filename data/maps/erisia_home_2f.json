@@ -82,6 +82,34 @@
     "y": 9,
     "dir": "right"
    }
+  },
+  {
+   "id": "bed",
+   "x": 2,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M01_침대"
+  },
+  {
+   "id": "window",
+   "x": 5,
+   "y": 1,
+   "trigger": "talk",
+   "label": "M01_창문"
+  },
+  {
+   "id": "shelf",
+   "x": 7,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M01_책장"
+  },
+  {
+   "id": "desk",
+   "x": 7,
+   "y": 4,
+   "trigger": "talk",
+   "label": "M01_책상"
   }
  ]
 }

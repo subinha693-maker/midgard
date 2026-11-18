@@ -95,6 +95,48 @@
     "y": 1,
     "dir": "down"
    }
+  },
+  {
+   "id": "sign3",
+   "x": 3,
+   "y": 5,
+   "trigger": "talk",
+   "label": "M05_간판"
+  },
+  {
+   "id": "sign7",
+   "x": 7,
+   "y": 5,
+   "trigger": "talk",
+   "label": "M05_간판"
+  },
+  {
+   "id": "sign14",
+   "x": 14,
+   "y": 5,
+   "trigger": "talk",
+   "label": "M05_간판"
+  },
+  {
+   "id": "sign18",
+   "x": 18,
+   "y": 5,
+   "trigger": "talk",
+   "label": "M05_간판"
+  },
+  {
+   "id": "lebri_sign",
+   "x": 12,
+   "y": 5,
+   "trigger": "talk",
+   "label": "M05_레브리간판"
+  },
+  {
+   "id": "smoke",
+   "x": 2,
+   "y": 7,
+   "trigger": "talk",
+   "label": "M05_망치골목"
   }
  ]
 }

@@ -61,6 +61,8 @@ export class FieldScene extends Phaser.Scene implements Host {
   menuOpen = false;
   private autorunGuard = 0;
   private inputCooldownUntil = 0; // 대사를 닫은 키가 바로 다시 조사로 이어지지 않게
+  /** 제한 시간 (체력 시험·추격). 원고·메뉴 중에는 멈춘다 */
+  private timer: { left: number; label: string } | null = null;
 
   ui!: { dlg: DialogueScene; cg: CGScene; hud: HudScene; letter: LetterScene };
 
@@ -102,7 +104,7 @@ export class FieldScene extends Phaser.Scene implements Host {
     this.scriptTint.setBlendMode(Phaser.BlendModes.MULTIPLY);
 
     const kb = this.input.keyboard!;
-    this.keys = kb.addKeys('UP,DOWN,LEFT,RIGHT,W,A,S,D,Z,X,SPACE,ENTER,ESC') as Record<string, Phaser.Input.Keyboard.Key>;
+    this.keys = kb.addKeys('UP,DOWN,LEFT,RIGHT,W,A,S,D,Z,X,SPACE,ENTER,ESC,SHIFT') as Record<string, Phaser.Input.Keyboard.Key>;
 
     this.input.on('pointerup', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.ui.hud.events.on('action', () => this.tryInteract());
@@ -169,6 +171,7 @@ export class FieldScene extends Phaser.Scene implements Host {
     }
 
     this.player = new CharSprite(this, game.state.playerSprite, x, y, dir);
+    this.player.setVisible(!game.state.flags['_플레이어숨김']);
     for (const ev of m.events) {
       const ch = new CharSprite(this, ev.sprite, ev.x, ev.y, ev.dir ?? 'down');
       this.npcs.set(ev.id, { ev, ch, route: expandRoute(ev.route ?? []), ri: 0, waitUntil: 0, busy: false });
@@ -240,7 +243,7 @@ export class FieldScene extends Phaser.Scene implements Host {
   }
 
   private blocksAt(x: number, y: number): boolean {
-    return this.eventsAt(x, y).some((n) => !!n.ev.sprite && !n.ev.through);
+    return this.eventsAt(x, y).some((n) => (!!n.ev.sprite && !n.ev.through) || !!n.ev.block);
   }
 
   passable(x: number, y: number): boolean {
@@ -341,7 +344,7 @@ export class FieldScene extends Phaser.Scene implements Host {
       const [dx, dy] = DIR_VEC[this.player.dir];
       cands.push(...this.eventsAt(fx + dx, fy + dy));
     }
-    for (const n of cands) if (n.ev.trigger === 'talk' && this.trigger(n)) return;
+    for (const n of cands) if ((n.ev.trigger === 'talk' || (n.ev.trigger === 'touch' && !!n.ev.sprite)) && this.trigger(n)) return;
   }
 
   // ───────────── 입력·이동 ─────────────
@@ -353,7 +356,7 @@ export class FieldScene extends Phaser.Scene implements Host {
     const ty = Math.floor(wp.y / T);
     if (tx < 0 || ty < 0 || tx >= this.map.w || ty >= this.map.h) return;
     const here = { x: this.player.gx, y: this.player.gy };
-    const talk = this.eventsAt(tx, ty).some((n) => n.ev.trigger === 'talk');
+    const talk = this.eventsAt(tx, ty).some((n) => n.ev.trigger === 'talk' || (n.ev.trigger === 'touch' && !!n.ev.sprite));
     this.pendingInteract = null;
     if (talk || !this.passable(tx, ty)) {
       // 말 걸 대상 → 옆 칸까지 가서 바라보고 조사
@@ -416,6 +419,18 @@ export class FieldScene extends Phaser.Scene implements Host {
     for (const n of this.npcs.values()) n.ch.update(dt, n.ch.moving);
 
     this.updateNpcs();
+    if (this.timer) {
+      if (!this.busy) this.timer.left -= dt / 1000;
+      this.ui.hud.setTimer(Math.max(0, this.timer.left));
+      if (this.timer.left <= 0 && !this.busy) {
+        const label = this.timer.label;
+        this.timer = null;
+        this.ui.hud.setTimer(null);
+        this.path = [];
+        void this.runScript(label);
+        return;
+      }
+    }
     if (this.busy) return;
     if (this.time.now < this.inputCooldownUntil) return;
     if (menuKey) return this.openMenu();
@@ -436,14 +451,15 @@ export class FieldScene extends Phaser.Scene implements Host {
         this.path = [];
         return;
       }
-      void this.tryStep(d).then(() => {
-        if (!this.path.length && this.pendingInteract) {
-          const p = this.pendingInteract;
-          this.pendingInteract = null;
-          this.player.face(p.x < this.player.gx ? 'left' : p.x > this.player.gx ? 'right' : p.y < this.player.gy ? 'up' : 'down');
-          this.tryInteract();
-        }
-      });
+      void this.tryStep(d);
+      return;
+    }
+    // 경로를 다 걸은 뒤: 탭했던 대상을 바라보고 조사 (걸음이 완전히 끝난 다음 프레임에)
+    if (this.pendingInteract) {
+      const p = this.pendingInteract;
+      this.pendingInteract = null;
+      this.player.face(p.x < this.player.gx ? 'left' : p.x > this.player.gx ? 'right' : p.y < this.player.gy ? 'up' : 'down');
+      this.tryInteract();
     }
   }
 
@@ -457,7 +473,8 @@ export class FieldScene extends Phaser.Scene implements Host {
       for (const n of this.eventsAt(nx, ny)) if (n.ev.trigger === 'touch' && n.ev.sprite && this.trigger(n)) return;
       return;
     }
-    await this.player.step(d, game.state.playerSpeed);
+    const run = !!game.state.flags['달리기_해금'] && (this.ui.hud.running || this.keys.SHIFT.isDown);
+    await this.player.step(d, game.state.playerSpeed * (run ? FIELD.runMultiplier : 1));
     game.state.map.x = this.player.gx;
     game.state.map.y = this.player.gy;
     game.state.map.dir = this.player.dir;
@@ -526,6 +543,10 @@ export class FieldScene extends Phaser.Scene implements Host {
 
   warn(msg: string): void {
     devWarn(msg);
+  }
+
+  refresh(): void {
+    this.refreshEvents();
   }
 
   onTimeAdvance(steps: number): void {
@@ -664,6 +685,14 @@ export class FieldScene extends Phaser.Scene implements Host {
       case 'wait':
         await this.wait(Number(a[0] ?? 0.5));
         return;
+      case 'timer':
+        // @timer 시작 25 실패라벨 / @timer 끝
+        if (a[0] === '시작' || a[0] === 'start') this.timer = { left: Number(a[1] ?? 30), label: a[2] ?? '' };
+        else {
+          this.timer = null;
+          this.ui.hud.setTimer(null);
+        }
+        return;
       case 'fade': {
         // @fade out 0.5 [흰색]
         const color = a[2] === '흰색' || a[2] === 'white' ? 0xffffff : 0x000000;
@@ -725,7 +754,7 @@ export class FieldScene extends Phaser.Scene implements Host {
         return;
       }
       case 'subtitle':
-        await this.ui.dlg.subtitle(a[0] ?? '', a[1] ? Number(a[1]) : undefined);
+        await this.ui.dlg.subtitle((a[0] ?? '').replace(/\\n/g, '\n'), a[1] ? Number(a[1]) : undefined);
         return;
       case 'sprite': {
         // @sprite 대상 시트키
@@ -736,6 +765,11 @@ export class FieldScene extends Phaser.Scene implements Host {
       }
       case 'show':
       case 'hide': {
+        if (['플레이어', 'player', '클로토'].includes(a[0])) {
+          game.state.flags['_플레이어숨김'] = c.name === 'hide';
+          this.player.setVisible(c.name === 'show');
+          return;
+        }
         delete game.state.flags[`_숨김:${this.map.id}:${a[0]}`];
         if (c.name === 'hide') game.state.flags[`_숨김:${this.map.id}:${a[0]}`] = true;
         this.refreshEvents();
@@ -781,7 +815,7 @@ export class FieldScene extends Phaser.Scene implements Host {
         return;
       case 'end_demo':
         await this.ui.cg.fade('out', 0.8);
-        await this.ui.dlg.subtitle(a[0] ?? 'M06으로 이어짐', 3.5);
+        await this.ui.dlg.subtitle((a[0] ?? 'M06으로 이어짐').replace(/\\n/g, '\n'), 4);
         this.toTitle();
         return;
       default:

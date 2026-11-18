@@ -104,7 +104,8 @@
     "x": 10,
     "y": 1,
     "dir": "down"
-   }
+   },
+   "show": "진행 >= 31"
   },
   {
    "id": "to_erisia_clinic_13_2",
@@ -115,7 +116,49 @@
     "x": 4,
     "y": 5,
     "dir": "up"
-   }
+   },
+   "show": "진행 >= 33"
+  },
+  {
+   "id": "receptionist",
+   "x": 6,
+   "y": 3,
+   "trigger": "talk",
+   "sprite": "npc_receptionist",
+   "dir": "down",
+   "pages": [
+    {
+     "if": "진행 == 30",
+     "label": "M03_접수"
+    },
+    {
+     "label": "M03_접수_평소"
+    }
+   ],
+   "show": "진행 >= 30"
+  },
+  {
+   "id": "notice",
+   "x": 10,
+   "y": 1,
+   "trigger": "talk",
+   "label": "M03_안내판"
+  },
+  {
+   "id": "back_closed",
+   "x": 2,
+   "y": 2,
+   "trigger": "touch",
+   "label": "M03_뒷문닫힘",
+   "show": "진행 < 31"
+  },
+  {
+   "id": "clinic_closed",
+   "x": 13,
+   "y": 2,
+   "trigger": "touch",
+   "label": "M03_의무실닫힘",
+   "show": "진행 < 33"
   }
  ]
 }

@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import { DISPLAY } from '../config/display';
 import { DIALOGUE } from '../config/dialogue';
 import { portraitSets, resolvePortrait } from '../core/portraits';
-import { blocker, button, COLORS, panel, text, type Button } from '../ui/widgets';
+import { blocker, button, clearObjects, COLORS, panel, text, type Button } from '../ui/widgets';
 
 const W = DISPLAY.width;
 const H = DISPLAY.height;
@@ -159,9 +159,15 @@ export class DialogueScene extends Phaser.Scene {
     void by;
   }
 
+  private clearChoices(): void {
+    const items = [...this.choiceLayer.list];
+    this.choiceLayer.removeAll(false);
+    clearObjects(items);
+  }
+
   /** 선택지 2~4개. 고른 번호를 돌려준다 */
   choose(options: string[]): Promise<number> {
-    this.choiceLayer.removeAll(true);
+    this.clearChoices();
     const bw = 560;
     const bh = DIALOGUE.choiceMinHeight;
     const gap = 12;
@@ -175,7 +181,7 @@ export class DialogueScene extends Phaser.Scene {
         kb.off('keydown-DOWN', down);
         kb.off('keydown-Z', ok);
         kb.off('keydown-ENTER', ok);
-        this.choiceLayer.removeAll(true);
+        this.clearChoices();
         res(i);
       };
       // 표정 CG와 겹치지 않게 반대쪽으로 비켜 놓는다

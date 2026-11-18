@@ -13,6 +13,8 @@ export interface Host {
   /** 시간대가 바뀔 때 (농도 감소 등, P3) */
   onTimeAdvance?(steps: number): void;
   warn?(msg: string): void;
+  /** 플래그·변수 등이 바뀐 뒤 (이벤트 보이기 다시 계산) */
+  refresh?(): void;
 }
 
 class Jump {
@@ -106,6 +108,11 @@ export class Runner {
   }
 
   private async cmd(c: Cmd): Promise<void> {
+    await this.cmdInner(c);
+    if (['flag', 'var', 'item', 'quest', 'money'].includes(c.name)) this.host.refresh?.();
+  }
+
+  private async cmdInner(c: Cmd): Promise<void> {
     const s = game.state;
     const a = c.args;
     switch (c.name) {

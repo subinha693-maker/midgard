@@ -74,6 +74,13 @@
     "y": 5,
     "dir": "down"
    }
+  },
+  {
+   "id": "beds",
+   "x": 4,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M04_선실_침대"
   }
  ]
 }

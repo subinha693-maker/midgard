@@ -88,7 +88,69 @@
     "x": 15,
     "y": 7,
     "dir": "left"
-   }
+   },
+   "show": "_개발_자유이동"
+  },
+  {
+   "id": "deck_sailor",
+   "x": 16,
+   "y": 3,
+   "trigger": "talk",
+   "sprite": "npc_sailor",
+   "dir": "down",
+   "label": "M04_선원_갑판",
+   "show": "진행 >= 41 && 진행 <= 43"
+  },
+  {
+   "id": "buoy8",
+   "x": 8,
+   "y": 1,
+   "trigger": "talk",
+   "label": "M04_부표"
+  },
+  {
+   "id": "buoy13",
+   "x": 13,
+   "y": 1,
+   "trigger": "talk",
+   "label": "M04_부표"
+  },
+  {
+   "id": "buoy18",
+   "x": 18,
+   "y": 1,
+   "trigger": "talk",
+   "label": "M04_부표"
+  },
+  {
+   "id": "believer0",
+   "x": 18,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "npc_believer",
+   "dir": "up",
+   "label": "M04_기도",
+   "show": "진행 >= 44"
+  },
+  {
+   "id": "believer1",
+   "x": 19,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "npc_believer",
+   "dir": "up",
+   "label": "M04_기도",
+   "show": "진행 >= 44"
+  },
+  {
+   "id": "believer2",
+   "x": 20,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "npc_believer",
+   "dir": "up",
+   "label": "M04_기도",
+   "show": "진행 >= 44"
   }
  ]
 }

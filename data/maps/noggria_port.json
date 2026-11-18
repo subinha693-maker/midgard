@@ -108,7 +108,8 @@
     "x": 3,
     "y": 6,
     "dir": "right"
-   }
+   },
+   "show": "_개발_자유이동"
   },
   {
    "id": "to_argo_deck_17_8",
@@ -119,7 +120,33 @@
     "x": 3,
     "y": 6,
     "dir": "right"
-   }
+   },
+   "show": "_개발_자유이동"
+  },
+  {
+   "id": "sailor",
+   "x": 15,
+   "y": 6,
+   "trigger": "talk",
+   "sprite": "npc_sailor",
+   "dir": "down",
+   "pages": [
+    {
+     "if": "진행 == 40",
+     "label": "M04_승선"
+    },
+    {
+     "label": "M04_선원_항구"
+    }
+   ],
+   "show": "진행 >= 40"
+  },
+  {
+   "id": "crates",
+   "x": 6,
+   "y": 11,
+   "trigger": "talk",
+   "label": "M04_항구_조사"
   }
  ]
 }

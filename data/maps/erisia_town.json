@@ -132,7 +132,8 @@
     "x": 7,
     "y": 9,
     "dir": "up"
-   }
+   },
+   "show": "진행 >= 30"
   },
   {
    "id": "to_noggria_port_33_15",
@@ -143,7 +144,8 @@
     "x": 1,
     "y": 7,
     "dir": "right"
-   }
+   },
+   "show": "진행 >= 40"
   },
   {
    "id": "to_noggria_port_33_16",
@@ -154,7 +156,104 @@
     "x": 1,
     "y": 8,
     "dir": "right"
-   }
+   },
+   "show": "진행 >= 40"
+  },
+  {
+   "id": "radio_auto",
+   "x": 0,
+   "y": 0,
+   "trigger": "autorun",
+   "pages": [
+    {
+     "if": "진행 == 11 && !라디오_들음",
+     "label": "M01_라디오"
+    }
+   ]
+  },
+  {
+   "id": "speaker",
+   "x": 16,
+   "y": 9,
+   "trigger": "talk",
+   "label": "M01_확성기"
+  },
+  {
+   "id": "poster1",
+   "x": 2,
+   "y": 12,
+   "trigger": "talk",
+   "label": "M01_벽보1"
+  },
+  {
+   "id": "poster2",
+   "x": 4,
+   "y": 12,
+   "trigger": "talk",
+   "label": "M01_벽보2"
+  },
+  {
+   "id": "poster3",
+   "x": 6,
+   "y": 12,
+   "trigger": "talk",
+   "label": "M01_벽보3"
+  },
+  {
+   "id": "marked_man",
+   "x": 18,
+   "y": 7,
+   "trigger": "talk",
+   "sprite": "npc_marked",
+   "dir": "left",
+   "label": "M01_명찰",
+   "show": "진행 <= 12",
+   "route": [
+    "left*4",
+    "wait 1.5",
+    "right*4",
+    "wait 1.5"
+   ]
+  },
+  {
+   "id": "woman",
+   "x": 25,
+   "y": 8,
+   "trigger": "talk",
+   "sprite": "npc_woman",
+   "dir": "left",
+   "label": "M01_지나가는_여자",
+   "show": "진행 <= 12",
+   "route": [
+    "left*2",
+    "wait 2",
+    "right*2",
+    "wait 2"
+   ]
+  },
+  {
+   "id": "cityhall_closed",
+   "x": 27,
+   "y": 4,
+   "trigger": "touch",
+   "label": "M01_시청닫힘",
+   "show": "진행 < 30"
+  },
+  {
+   "id": "east_closed1",
+   "x": 33,
+   "y": 15,
+   "trigger": "touch",
+   "label": "M01_항구닫힘",
+   "show": "진행 < 40"
+  },
+  {
+   "id": "east_closed2",
+   "x": 33,
+   "y": 16,
+   "trigger": "touch",
+   "label": "M01_항구닫힘",
+   "show": "진행 < 40"
   }
  ],
  "hospital": {

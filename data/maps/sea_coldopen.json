@@ -39,5 +39,16 @@
   "                       "
  ],
  "props": [],
- "events": []
+ "events": [
+  {
+   "id": "anan_boat",
+   "x": 11,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "anan",
+   "dir": "up",
+   "label": "콜드오픈",
+   "show": "진행 < 10"
+  }
+ ]
 }

@@ -104,3 +104,30 @@ describe('원고 실행기', () => {
     expect(s.money).toBe(500);
   });
 });
+
+describe('실제 원고 (data/scenario) 검사', () => {
+  it('문법 오류·없는 라벨·없는 표정 없음', async () => {
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const { parseMap } = await import('../src/field/mapdata');
+    const portraits = JSON.parse(readFileSync('data/portraits.json', 'utf8')).characters;
+    const lib = new ScriptLibrary();
+    for (const f of readdirSync('data/scenario').filter((n: string) => n.endsWith('.md'))) lib.add(readFileSync(`data/scenario/${f}`, 'utf8'), f);
+    const targets: { file: string; line: number; label: string }[] = [];
+    for (const f of readdirSync('data/maps').filter((n: string) => n.endsWith('.json'))) {
+      const m = parseMap(JSON.parse(readFileSync(`data/maps/${f}`, 'utf8')), f);
+      for (const ev of m.events) for (const pg of ev.pages) targets.push({ file: f, line: 0, label: pg.label });
+    }
+    lib.validate(targets);
+    expect(lib.errors).toEqual([]);
+    // 표정 키 확인 (CG 가 있는 인물만)
+    const bad: string[] = [];
+    const walk = (nodes: any[]) => {
+      for (const nd of nodes) {
+        if (nd.kind === 'say' && nd.speaker && nd.expr && portraits[nd.speaker] && !portraits[nd.speaker].expressions[nd.expr]) bad.push(`${nd.speaker}:${nd.expr} (${nd.line})`);
+        if (nd.kind === 'if') { nd.branches.forEach((b: any) => walk(b.body)); walk(nd.elseBody); }
+      }
+    };
+    for (const l of lib.labels.values()) if (!l.file.startsWith('TEST')) walk(l.body);
+    expect(bad).toEqual([]);
+  });
+});

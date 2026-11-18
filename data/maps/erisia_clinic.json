@@ -67,6 +67,30 @@
     "y": 3,
     "dir": "down"
    }
+  },
+  {
+   "id": "doctor",
+   "x": 3,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "npc_doctor",
+   "dir": "right",
+   "pages": [
+    {
+     "if": "진행 == 33",
+     "label": "M03_혈액검사"
+    },
+    {
+     "label": "M03_검사관_평소"
+    }
+   ]
+  },
+  {
+   "id": "machine",
+   "x": 2,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M03_측정기"
   }
  ]
 }

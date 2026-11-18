@@ -412,6 +412,37 @@ export const TILE_DEFS: [string, Draw][] = [
     g.fillRect(6, 24, 3, 20);
     g.fillRect(39, 24, 3, 20);
   }],
+  // ── P5: 조사 대상 ──
+  ['newspapers', (g) => {
+    for (let i = 0; i < 6; i++) {
+      g.fillStyle = i % 2 ? '#d8d2c0' : '#e8e2d0';
+      g.fillRect(6 + (i % 2) * 3, 36 - i * 5, 34, 6);
+      g.fillStyle = '#8a8478';
+      g.fillRect(10 + (i % 2) * 3, 38 - i * 5, 20, 1);
+    }
+  }],
+  ['plate', (g) => {
+    g.fillStyle = '#f2efe8';
+    g.beginPath();
+    g.ellipse(24, 30, 15, 9, 0, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = '#9a7a4a';
+    g.fillRect(18, 27, 9, 4);
+  }],
+  ['calendar', (g) => {
+    g.fillStyle = '#efe9dc';
+    g.fillRect(12, 8, 24, 28);
+    g.fillStyle = '#a03a3a';
+    g.fillRect(12, 8, 24, 6);
+    g.fillStyle = '#8a8478';
+    for (let y = 18; y < 34; y += 4) for (let x = 14; x < 34; x += 5) g.fillRect(x, y, 3, 2);
+  }],
+  ['memo', (g) => {
+    g.fillStyle = '#f4ecd2';
+    g.fillRect(16, 26, 18, 13);
+    g.fillStyle = '#6a6250';
+    for (let y = 29; y < 37; y += 3) g.fillRect(18, y, 13, 1);
+  }],
 ];
 
 export const TILE_INDEX: Record<string, number> = Object.fromEntries(TILE_DEFS.map(([n], i) => [n, i]));
@@ -450,5 +481,7 @@ export function buildTiles(scene: Phaser.Scene, sheetRefs: string[] = []): void 
     g.drawImage(img, col * sh.tile, row * sh.tile, sh.tile, sh.tile, (i % cols) * T, Math.floor(i / cols) * T, T, T);
     TILE_INDEX[ref] = i;
   });
-  scene.textures.addCanvas('tiles', c);
+  const tex = scene.textures.addCanvas('tiles', c)!;
+  // 이름으로 쓸 수 있게 프레임 등록 (이벤트의 "tile:이름")
+  for (const [name, i] of Object.entries(TILE_INDEX)) tex.add(name, 0, (i % cols) * T, Math.floor(i / cols) * T, T, T);
 }

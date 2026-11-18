@@ -2,7 +2,7 @@
 // 생일 메모(M01 끝, M02 다시 읽기)에서 같은 화면을 쓴다. 강조할 줄을 주면 그 줄만 밝게 표시.
 import Phaser from 'phaser';
 import { DISPLAY } from '../config/display';
-import { blocker, SERIF, text } from '../ui/widgets';
+import { blocker, clearObjects, SERIF, text } from '../ui/widgets';
 
 const W = DISPLAY.width;
 const H = DISPLAY.height;
@@ -14,7 +14,7 @@ export class LetterScene extends Phaser.Scene {
 
   /** 편지를 보여 주고, 탭하면 닫힌다 */
   open(body: string, highlight?: string): Promise<void> {
-    this.children.removeAll(true);
+    clearObjects([...this.children.list]);
     const pw = Math.min(860, W - 80);
     const ph = H - 70;
     const px = (W - pw) / 2;
@@ -82,7 +82,7 @@ export class LetterScene extends Phaser.Scene {
         kb.off('keydown-Z', finish);
         kb.off('keydown-ENTER', finish);
         kb.off('keydown-X', finish);
-        this.children.removeAll(true);
+        clearObjects([...this.children.list]);
         res();
       };
       this.time.delayedCall(250, () => {

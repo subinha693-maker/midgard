@@ -71,6 +71,30 @@
     "y": 4,
     "dir": "down"
    }
+  },
+  {
+   "id": "baker",
+   "x": 4,
+   "y": 3,
+   "trigger": "talk",
+   "sprite": "npc_baker",
+   "dir": "down",
+   "pages": [
+    {
+     "if": "진행 == 11",
+     "label": "M01_빵집"
+    },
+    {
+     "label": "M01_빵집_평소"
+    }
+   ]
+  },
+  {
+   "id": "bread",
+   "x": 7,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M01_빵진열대"
   }
  ]
 }

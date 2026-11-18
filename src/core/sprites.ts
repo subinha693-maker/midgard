@@ -19,6 +19,8 @@ interface SheetDef {
   bg?: string;
   tolerance?: number;
   frames?: Partial<Record<Dir, [number, number, number][]>>; // 방향별 [행, 열, 뒤집기]
+  native?: boolean; // 이미 투명 배경 도트: 가공 없이 그대로
+  scale?: number; // 화면 배율
 }
 const DATA = spriteData as unknown as { displayHeight: number; sheets: Record<string, SheetDef> };
 
@@ -28,6 +30,7 @@ export interface SheetInfo {
   frameH: number;
   walk: number[];
   stand: number;
+  scale: number;
 }
 const info = new Map<string, SheetInfo>();
 const DIRS: Dir[] = ['down', 'left', 'right', 'up'];
@@ -77,6 +80,7 @@ export function frameName(dir: Dir, col: number): string {
 }
 
 function buildSheet(scene: Phaser.Scene, key: string, def: SheetDef): SheetInfo {
+  if (def.native) return nativeSheet(scene, key, def);
   const img = scene.textures.get('src:' + key).getSourceImage() as HTMLImageElement;
   const [cols, rows] = def.grid ?? [3, 4];
   const cw = Math.floor(img.width / cols);
@@ -141,7 +145,20 @@ function buildSheet(scene: Phaser.Scene, key: string, def: SheetDef): SheetInfo 
   DIRS.forEach((d, di) => {
     for (let c = 0; c < cols; c++) tex.add(frameName(d, c), 0, c * fw, di * fh, fw, fh);
   });
-  return { texture: tkey, frameW: fw, frameH: fh, walk: def.walk ?? [0, 1, 2, 1], stand: def.stand ?? 1 };
+  return { texture: tkey, frameW: fw, frameH: fh, walk: def.walk ?? [0, 1, 2, 1], stand: def.stand ?? 1, scale: def.scale ?? 1 };
+}
+
+/** 가공 없이 칸만 나눈다 (코드로 만든 임시 NPC 등) */
+function nativeSheet(scene: Phaser.Scene, key: string, def: SheetDef): SheetInfo {
+  const tkey = 'src:' + key;
+  const tex = scene.textures.get(tkey);
+  const img = tex.getSourceImage() as HTMLImageElement;
+  const [cols, rows] = def.grid ?? [3, 4];
+  const fw = Math.floor(img.width / cols);
+  const fh = Math.floor(img.height / rows);
+  const rowOf = def.rows ?? { down: 0, left: 1, right: 2, up: 3 };
+  for (const d of DIRS) for (let c = 0; c < cols; c++) tex.add(frameName(d, c), 0, c * fw, rowOf[d] * fh, fw, fh);
+  return { texture: tkey, frameW: fw, frameH: fh, walk: def.walk ?? [0, 1, 2, 1], stand: def.stand ?? 1, scale: def.scale ?? 1 };
 }
 
 /** 가장자리에서 시작하는 채우기로 배경색을 투명하게. 잉크 영역 범위를 돌려준다 */

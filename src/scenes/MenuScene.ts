@@ -159,9 +159,9 @@ export class MenuScene extends Phaser.Scene {
         b.setLabel(`${label}: ${get() ? '켜짐' : '꺼짐'}`);
         this.body.add(b);
       };
-      toggle(p.y, '방향 패드', () => settings.dpad, (v) => (settings.dpad = v));
+      toggle(p.y, '조이스틱·버튼', () => settings.dpad, (v) => (settings.dpad = v));
       toggle(p.y + 80, '메뉴에서 저장 (개발용)', () => settings.menuSave, (v) => (settings.menuSave = v));
-      this.line(p.x, p.y + 170, '키보드: 방향키 이동 · Z 조사/넘기기 · X 메뉴 · Shift 빨리 넘기기', 20, COLORS.dim);
+      this.line(p.x, p.y + 170, '키보드: 방향키 이동 · Z 조사/넘기기 · X 메뉴 · Shift 달리기/빨리 넘기기', 20, COLORS.dim);
     }
   }
 

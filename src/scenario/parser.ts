@@ -15,7 +15,7 @@ export interface ParseError { file: string; line: number; message: string }
 export const COMMANDS = new Set([
   'map', 'move', 'face', 'wait', 'fade', 'shake', 'tint', 'distort', 'cg', 'letter', 'battle',
   'flag', 'var', 'goto', 'call', 'return', 'stop', 'quest', 'item', 'money', 'concentration', 'time',
-  'sprite', 'bgm', 'se', 'subtitle', 'speed', 'show', 'hide', 'save', 'autosave', 'title', 'end_demo',
+  'sprite', 'bgm', 'se', 'subtitle', 'speed', 'show', 'hide', 'save', 'autosave', 'title', 'end_demo', 'timer',
 ]);
 
 /** 따옴표를 존중해 공백으로 나눈다: 목표 "마을을 둘러본다" → ['목표', '마을을 둘러본다'] */
@@ -171,6 +171,7 @@ export class ScriptLibrary {
       for (const nd of nodes) {
         if (nd.kind === 'choice') nd.options.forEach((o) => check(file, o.line, o.target));
         else if (nd.kind === 'cmd' && (nd.name === 'goto' || nd.name === 'call')) check(file, nd.line, nd.args[0] ?? '');
+        else if (nd.kind === 'cmd' && nd.name === 'timer' && nd.args[2]) check(file, nd.line, nd.args[2]);
         else if (nd.kind === 'if') {
           nd.branches.forEach((b) => walk(file, b.body));
           walk(file, nd.elseBody);

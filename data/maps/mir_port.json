@@ -98,7 +98,8 @@
     "x": 1,
     "y": 8,
     "dir": "right"
-   }
+   },
+   "show": "진행 >= 52"
   },
   {
    "id": "to_mir_market_25_8",
@@ -109,7 +110,57 @@
     "x": 1,
     "y": 9,
     "dir": "right"
-   }
+   },
+   "show": "진행 >= 52"
+  },
+  {
+   "id": "mir_sailor",
+   "x": 13,
+   "y": 11,
+   "trigger": "talk",
+   "sprite": "npc_sailor",
+   "dir": "up",
+   "label": "M04_선원_갑판",
+   "show": "진행 == 50"
+  },
+  {
+   "id": "boy",
+   "x": 16,
+   "y": 10,
+   "trigger": "touch",
+   "sprite": "npc_boy",
+   "dir": "left",
+   "pages": [
+    {
+     "if": "진행 == 51",
+     "label": "M05_잡음"
+    }
+   ],
+   "show": "진행 >= 50 && 진행 <= 51"
+  },
+  {
+   "id": "busstop",
+   "x": 4,
+   "y": 9,
+   "trigger": "talk",
+   "label": "M05_정류장",
+   "show": "진행 >= 52"
+  },
+  {
+   "id": "east_block1",
+   "x": 25,
+   "y": 7,
+   "trigger": "touch",
+   "label": "M05_길막",
+   "show": "진행 < 52"
+  },
+  {
+   "id": "east_block2",
+   "x": 25,
+   "y": 8,
+   "trigger": "touch",
+   "label": "M05_길막",
+   "show": "진행 < 52"
   }
  ],
  "hospital": {

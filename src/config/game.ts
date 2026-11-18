@@ -1,10 +1,10 @@
-// 새 게임 시작 위치 — P5에서 콜드 오픈으로 바뀐다
+// 새 게임 시작: 콜드 오픈 (테스트 맵은 개발 패널에서 TEST_시작)
 export const NEW_GAME = {
-  map: 'test',
-  x: 5,
+  map: 'sea_coldopen',
+  x: 11,
   y: 6,
-  dir: 'down' as const,
+  dir: 'up' as const,
   sprite: 'klotho_home',
-  label: 'TEST_시작',
+  label: '콜드오픈',
   money: 0,
 };

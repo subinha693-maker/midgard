@@ -113,12 +113,34 @@ class M:
         self.props.append({'prop': name, 'x': x, 'y': y})
         return self
 
-    def go(self, x, y, to, tx, ty, d=None):
-        """밟으면 다른 맵으로"""
+    def go(self, x, y, to, tx, ty, d=None, show=None):
+        """밟으면 다른 맵으로 (show: 이 조건일 때만)"""
         t = {'map': to, 'x': tx, 'y': ty}
         if d:
             t['dir'] = d
-        self.events.append({'id': f'to_{to}_{x}_{y}', 'x': x, 'y': y, 'transfer': t})
+        e = {'id': f'to_{to}_{x}_{y}', 'x': x, 'y': y, 'transfer': t}
+        if show:
+            e['show'] = show
+        self.events.append(e)
+        return self
+
+    def ev(self, eid, x, y, label=None, pages=None, sprite=None, d='down', trigger='talk', show=None, route=None, block=None):
+        """이야기 이벤트: NPC·조사 지점·자동 실행"""
+        e = {'id': eid, 'x': x, 'y': y, 'trigger': trigger}
+        if sprite:
+            e['sprite'] = sprite
+            e['dir'] = d
+        if pages:
+            e['pages'] = [{'if': c, 'label': l} if c else {'label': l} for c, l in pages]
+        else:
+            e['label'] = label
+        if show:
+            e['show'] = show
+        if route:
+            e['route'] = route
+        if block:
+            e['block'] = True
+        self.events.append(e)
         return self
 
     def look(self, eid, x, y, label):
@@ -211,8 +233,8 @@ def build():
     m.put(10, 4, 'Y').put(20, 4, 'Y').put(30, 7, 'Y')
     m.go(4, 3, 'erisia_home_1f', 6, 10, 'up')
     m.go(15, 3, 'erisia_bakery', 5, 7, 'up')
-    m.go(27, 4, 'erisia_cityhall', 7, 9, 'up')
-    m.go(33, 15, 'noggria_port', 1, 7, 'right').go(33, 16, 'noggria_port', 1, 8, 'right')
+    m.go(27, 4, 'erisia_cityhall', 7, 9, 'up', '진행 >= 30')
+    m.go(33, 15, 'noggria_port', 1, 7, 'right', '진행 >= 40').go(33, 16, 'noggria_port', 1, 8, 'right', '진행 >= 40')
     m.hospital = {'map': 'erisia_town', 'x': 27, 'y': 6}
     maps.append(m)
 
@@ -232,8 +254,8 @@ def build():
     m.put(10, 1, 'P')  # 엽사 등급 안내판
     m.rect(7, 10, 1, 1, ';')
     m.go(7, 10, 'erisia_town', 27, 5, 'down')
-    m.go(2, 2, 'erisia_testground', 10, 1, 'down')
-    m.go(13, 2, 'erisia_clinic', 4, 5, 'up')
+    m.go(2, 2, 'erisia_testground', 10, 1, 'down', '진행 >= 31')
+    m.go(13, 2, 'erisia_clinic', 4, 5, 'up', '진행 >= 33')
     maps.append(m)
 
     # ── 에리시아 · 의무실 (혈액 검사) ──
@@ -251,6 +273,7 @@ def build():
     m.rect(2, 2, 1, 3, '|')  # 출발선
     m.rect(2, 2, 18, 3, '"')
     m.rect(2, 2, 1, 3, '|')
+    m.rect(20, 2, 1, 3, '|')  # 결승선
     for x, y in [(5, 2), (8, 4), (11, 3), (14, 2), (17, 4)]:
         m.put(x, y, 'J')
     m.put(19, 3, 'Y')
@@ -269,7 +292,7 @@ def build():
     m.rect(16, 7, 2, 2, '>')  # 다리판
     m.put(3, 6, 'Y').put(9, 6, 'Y').put(6, 11, 'x').put(7, 11, 'x').put(6, 12, 'v').put(13, 13, 'v').put(14, 4, 'x')
     m.go(0, 7, 'erisia_town', 32, 15, 'left').go(0, 8, 'erisia_town', 32, 16, 'left')
-    m.go(17, 7, 'argo_deck', 3, 6, 'right').go(17, 8, 'argo_deck', 3, 6, 'right')
+    m.go(17, 7, 'argo_deck', 3, 6, 'right', '_개발_자유이동').go(17, 8, 'argo_deck', 3, 6, 'right', '_개발_자유이동')
     maps.append(m)
 
     # ── 아르고 정기선 · 갑판 ──
@@ -283,7 +306,7 @@ def build():
     for x in range(3, 23, 5):
         m.put(x, 0, 'y', 'g')  # 노란 부표 (경계)
     m.go(4, 4, 'argo_cabin', 5, 5, 'up')
-    m.go(2, 6, 'noggria_port', 15, 7, 'left')  # 출항 전 내리기 (원고에서 막음)
+    m.go(2, 6, 'noggria_port', 15, 7, 'left', '_개발_자유이동')  # 이야기 중에는 막힘 (개발용)
     maps.append(m)
 
     # ── 아르고 정기선 · 선실 ──
@@ -306,7 +329,7 @@ def build():
     m.rect(0, 13, 26, 3, 'W')
     m.rect(5, 13, 10, 3, 'h').rect(6, 14, 8, 2, 'k').put(10, 14, 'p')  # 정박한 아르고
     m.put(4, 9, '%').put(20, 9, 'x').put(21, 9, 'x').put(22, 10, 'v').put(2, 11, 'v')
-    m.go(25, 7, 'mir_market', 1, 8, 'right').go(25, 8, 'mir_market', 1, 9, 'right')
+    m.go(25, 7, 'mir_market', 1, 8, 'right', '진행 >= 52').go(25, 8, 'mir_market', 1, 9, 'right', '진행 >= 52')
     m.hospital = {'map': 'mir_market', 'x': 3, 'y': 8}
     maps.append(m)
 
@@ -350,8 +373,110 @@ def build():
     m.go(6, 9, 'mir_hammer', 11, 5, 'down')
     maps.append(m)
 
+    story({mm.id: mm for mm in maps})
     for mm in maps:
         mm.save()
+
+
+def story(M):
+    """프롤로그 이야기 이벤트 (원고: data/scenario/*.md). 변수 '진행'으로 장면을 나눈다."""
+    m = M['sea_coldopen']
+    m.ev('anan_boat', 11, 4, sprite='anan', d='up', label='콜드오픈', show='진행 < 10')
+
+    m = M['erisia_home_2f']
+    m.ev('bed', 2, 2, 'M01_침대').ev('window', 5, 1, 'M01_창문').ev('shelf', 7, 2, 'M01_책장').ev('desk', 7, 4, 'M01_책상')
+
+    m = M['erisia_home_1f']
+    m.ev('auto', 0, 0, trigger='autorun', pages=[('진행 == 10', 'M01_부엌'), ('진행 == 12', 'M01_저녁'), ('진행 == 34', 'M03_결과')])
+    m.ev('anan_kitchen', 3, 3, sprite='anan', d='up', show='진행 >= 10 && 진행 <= 12', pages=[('진행 == 11', 'M01_아난_심부름'), (None, 'M01_부엌_조사')])
+    m.ev('anan_dinner', 5, 4, sprite='anan', d='down', show='진행 == 13', label='M01_부엌_조사')
+    m.ev('anan_night', 11, 9, sprite='anan', d='left', show='진행 == 14', label='M01_부엌_조사')
+    m.ev('pot', 3, 2, 'M01_부엌_조사', show='진행 <= 12')
+    m.ev('memo', 4, 6, 'M01_식탁', sprite='tile:memo', show='진행 == 15')
+    m.ev('wardrobe', 14, 2, 'M01_아난의방', show='진행 == 15')
+    m.ev('livingdesk', 9, 8, 'M01_거실책상', show='진행 == 15')
+    m.ev('clerk', 6, 10, 'M01_부엌_조사', sprite='npc_clerk', d='up', show='진행 == 21')
+    m.ev('papers', 8, 9, 'M02_신문더미', sprite='tile:newspapers', show='진행 == 23')
+    m.ev('plate', 4, 6, 'M02_접시', sprite='tile:plate', show='진행 == 23')
+    m.ev('calendar', 11, 1, 'M02_달력', sprite='tile:calendar', show='진행 == 23')
+    m.ev('anan_door', 13, 4, 'M02_아난의방문', show='진행 == 23', block=True)
+    m.ev('drawer', 9, 8, 'M02_서랍', show='진행 == 23')
+    m.ev('hans_door', 6, 10, 'M02_노크', sprite='hans', d='up', show='진행 == 24')
+    m.ev('hans_table', 5, 4, 'M02_노크', sprite='hans', d='down', show='진행 == 25')
+    m.ev('hans_leave', 6, 9, 'M02_노크', sprite='hans', d='up', show='진행 == 26')
+
+    m = M['erisia_town']
+    m.ev('radio_auto', 0, 0, trigger='autorun', pages=[('진행 == 11 && !라디오_들음', 'M01_라디오')])
+    m.ev('speaker', 16, 9, 'M01_확성기')
+    m.ev('poster1', 2, 12, 'M01_벽보1').ev('poster2', 4, 12, 'M01_벽보2').ev('poster3', 6, 12, 'M01_벽보3')
+    m.ev('marked_man', 18, 7, 'M01_명찰', sprite='npc_marked', d='left', show='진행 <= 12', route=['left*4', 'wait 1.5', 'right*4', 'wait 1.5'])
+    m.ev('woman', 25, 8, 'M01_지나가는_여자', sprite='npc_woman', d='left', show='진행 <= 12', route=['left*2', 'wait 2', 'right*2', 'wait 2'])
+    m.ev('cityhall_closed', 27, 4, 'M01_시청닫힘', trigger='touch', show='진행 < 30')
+    m.ev('east_closed1', 33, 15, 'M01_항구닫힘', trigger='touch', show='진행 < 40')
+    m.ev('east_closed2', 33, 16, 'M01_항구닫힘', trigger='touch', show='진행 < 40')
+
+    m = M['erisia_bakery']
+    m.ev('baker', 4, 3, sprite='npc_baker', d='down', pages=[('진행 == 11', 'M01_빵집'), (None, 'M01_빵집_평소')])
+    m.ev('bread', 7, 2, 'M01_빵진열대')
+
+    m = M['erisia_cityhall']
+    m.ev('receptionist', 6, 3, sprite='npc_receptionist', d='down', show='진행 >= 30', pages=[('진행 == 30', 'M03_접수'), (None, 'M03_접수_평소')])
+    m.ev('notice', 10, 1, 'M03_안내판')
+    m.ev('back_closed', 2, 2, 'M03_뒷문닫힘', trigger='touch', show='진행 < 31')
+    m.ev('clinic_closed', 13, 2, 'M03_의무실닫힘', trigger='touch', show='진행 < 33')
+
+    m = M['erisia_testground']
+    m.ev('examiner', 4, 6, sprite='npc_examiner', d='up', pages=[('진행 == 31', 'M03_체력시험'), ('진행 == 32', 'M03_실전시험'), (None, 'M03_시험관_평소')])
+    for y in (2, 3, 4):
+        m.ev(f'finish{y}', 20, y, 'M03_결승선', trigger='touch', show='체력시험_중')
+    m.ev('cage1', 5, 9, 'M03_철창').ev('cage2', 13, 9, 'M03_철창')
+
+    m = M['erisia_clinic']
+    m.ev('doctor', 3, 4, sprite='npc_doctor', d='right', pages=[('진행 == 33', 'M03_혈액검사'), (None, 'M03_검사관_평소')])
+    m.ev('machine', 2, 2, 'M03_측정기')
+
+    m = M['noggria_port']
+    m.ev('sailor', 15, 6, sprite='npc_sailor', d='down', show='진행 >= 40', pages=[('진행 == 40', 'M04_승선'), (None, 'M04_선원_항구')])
+    m.ev('crates', 6, 11, 'M04_항구_조사')
+
+    m = M['argo_deck']
+    m.ev('deck_sailor', 16, 3, 'M04_선원_갑판', sprite='npc_sailor', d='down', show='진행 >= 41 && 진행 <= 43')
+    for x in (8, 13, 18):
+        m.ev(f'buoy{x}', x, 1, 'M04_부표')
+    for i, x in enumerate((18, 19, 20)):
+        m.ev(f'believer{i}', x, 4, 'M04_기도', sprite='npc_believer', d='up', show='진행 >= 44')
+
+    m = M['argo_cabin']
+    m.ev('beds', 4, 2, 'M04_선실_침대')
+
+    m = M['mir_port']
+    m.ev('mir_sailor', 13, 11, 'M04_선원_갑판', sprite='npc_sailor', d='up', show='진행 == 50')
+    m.ev('boy', 16, 10, sprite='npc_boy', d='left', trigger='touch', show='진행 >= 50 && 진행 <= 51', pages=[('진행 == 51', 'M05_잡음')])
+    m.ev('busstop', 4, 9, 'M05_정류장', show='진행 >= 52')
+    m.ev('east_block1', 25, 7, 'M05_길막', trigger='touch', show='진행 < 52')
+    m.ev('east_block2', 25, 8, 'M05_길막', trigger='touch', show='진행 < 52')
+
+    m = M['mir_market']
+    m.ev('auto', 0, 0, trigger='autorun', pages=[('진행 >= 52 && !보호비_봄', 'M05_보호비')])
+    m.ev('merchant', 9, 7, 'M05_상인', sprite='npc_merchant', d='down')
+    m.ev('collector1', 9, 8, 'M05_상인', sprite='npc_collector', d='up', show='!보호비_봄')
+    m.ev('collector2', 10, 8, 'M05_상인', sprite='npc_collector', d='up', show='!보호비_봄')
+    m.ev('vendor', 19, 13, 'M05_캡슐노점', sprite='npc_vendor', d='up')
+    m.ev('unmarked1', 6, 9, 'M05_명찰없음', sprite='npc_unmarked', d='right', route=['right*3', 'wait 1', 'left*3', 'wait 1'])
+    m.ev('unmarked2', 21, 10, 'M05_명찰없음', sprite='npc_unmarked', d='left', route=['left*2', 'wait 1.5', 'right*2', 'wait 1.5'])
+    m.ev('sia_woman', 15, 9, 'M05_명찰없음', sprite='npc_sia_woman', d='down')
+    m.ev('busstop', 25, 8, 'M05_정류장')
+
+    m = M['mir_hammer']
+    for x in (3, 7, 14, 18):
+        m.ev(f'sign{x}', x, 5, 'M05_간판')
+    m.ev('lebri_sign', 12, 5, 'M05_레브리간판')
+    m.ev('smoke', 2, 7, 'M05_망치골목')
+
+    m = M['mir_lebri']
+    m.ev('auto', 0, 0, trigger='autorun', pages=[('진행 >= 52 && 진행 < 55', 'M05_레브리')])
+    m.ev('rotte', 6, 5, 'M05_로테', sprite='npc_rotte', d='down')
+    m.ev('hans_lebri', 11, 2, 'M05_한스_평소', sprite='hans', d='down', show='진행 >= 56')
 
 
 if __name__ == '__main__':

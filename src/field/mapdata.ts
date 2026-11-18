@@ -20,6 +20,7 @@ export interface MapEvent {
   pages: EventPage[];
   show?: string; // 이 조건이 참일 때만 나타남
   through?: boolean; // 통과 가능 (기본: 도트가 있으면 막힘)
+  block?: boolean; // 도트가 없어도 막힘 (보이지 않는 벽·잠긴 문)
   route?: string[]; // NPC 이동 경로: "left", "up*2", "wait 1", "face down"
   routeLoop?: boolean;
   transfer?: { map: string; x: number; y: number; dir?: Dir };
@@ -117,6 +118,7 @@ export function parseMap(raw: unknown, id: string): MapData {
       pages: e.pages ?? (e.label ? [{ label: e.label }] : []),
       show: e.show,
       through: e.through,
+      block: e.block,
       route: e.route,
       routeLoop: e.routeLoop ?? true,
       transfer: e.transfer,

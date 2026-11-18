@@ -144,6 +144,185 @@
     "y": 4,
     "dir": "down"
    }
+  },
+  {
+   "id": "auto",
+   "x": 0,
+   "y": 0,
+   "trigger": "autorun",
+   "pages": [
+    {
+     "if": "진행 == 10",
+     "label": "M01_부엌"
+    },
+    {
+     "if": "진행 == 12",
+     "label": "M01_저녁"
+    },
+    {
+     "if": "진행 == 34",
+     "label": "M03_결과"
+    }
+   ]
+  },
+  {
+   "id": "anan_kitchen",
+   "x": 3,
+   "y": 3,
+   "trigger": "talk",
+   "sprite": "anan",
+   "dir": "up",
+   "pages": [
+    {
+     "if": "진행 == 11",
+     "label": "M01_아난_심부름"
+    },
+    {
+     "label": "M01_부엌_조사"
+    }
+   ],
+   "show": "진행 >= 10 && 진행 <= 12"
+  },
+  {
+   "id": "anan_dinner",
+   "x": 5,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "anan",
+   "dir": "down",
+   "label": "M01_부엌_조사",
+   "show": "진행 == 13"
+  },
+  {
+   "id": "anan_night",
+   "x": 11,
+   "y": 9,
+   "trigger": "talk",
+   "sprite": "anan",
+   "dir": "left",
+   "label": "M01_부엌_조사",
+   "show": "진행 == 14"
+  },
+  {
+   "id": "pot",
+   "x": 3,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M01_부엌_조사",
+   "show": "진행 <= 12"
+  },
+  {
+   "id": "memo",
+   "x": 4,
+   "y": 6,
+   "trigger": "talk",
+   "sprite": "tile:memo",
+   "dir": "down",
+   "label": "M01_식탁",
+   "show": "진행 == 15"
+  },
+  {
+   "id": "wardrobe",
+   "x": 14,
+   "y": 2,
+   "trigger": "talk",
+   "label": "M01_아난의방",
+   "show": "진행 == 15"
+  },
+  {
+   "id": "livingdesk",
+   "x": 9,
+   "y": 8,
+   "trigger": "talk",
+   "label": "M01_거실책상",
+   "show": "진행 == 15"
+  },
+  {
+   "id": "clerk",
+   "x": 6,
+   "y": 10,
+   "trigger": "talk",
+   "sprite": "npc_clerk",
+   "dir": "up",
+   "label": "M01_부엌_조사",
+   "show": "진행 == 21"
+  },
+  {
+   "id": "papers",
+   "x": 8,
+   "y": 9,
+   "trigger": "talk",
+   "sprite": "tile:newspapers",
+   "dir": "down",
+   "label": "M02_신문더미",
+   "show": "진행 == 23"
+  },
+  {
+   "id": "plate",
+   "x": 4,
+   "y": 6,
+   "trigger": "talk",
+   "sprite": "tile:plate",
+   "dir": "down",
+   "label": "M02_접시",
+   "show": "진행 == 23"
+  },
+  {
+   "id": "calendar",
+   "x": 11,
+   "y": 1,
+   "trigger": "talk",
+   "sprite": "tile:calendar",
+   "dir": "down",
+   "label": "M02_달력",
+   "show": "진행 == 23"
+  },
+  {
+   "id": "anan_door",
+   "x": 13,
+   "y": 4,
+   "trigger": "talk",
+   "label": "M02_아난의방문",
+   "show": "진행 == 23",
+   "block": true
+  },
+  {
+   "id": "drawer",
+   "x": 9,
+   "y": 8,
+   "trigger": "talk",
+   "label": "M02_서랍",
+   "show": "진행 == 23"
+  },
+  {
+   "id": "hans_door",
+   "x": 6,
+   "y": 10,
+   "trigger": "talk",
+   "sprite": "hans",
+   "dir": "up",
+   "label": "M02_노크",
+   "show": "진행 == 24"
+  },
+  {
+   "id": "hans_table",
+   "x": 5,
+   "y": 4,
+   "trigger": "talk",
+   "sprite": "hans",
+   "dir": "down",
+   "label": "M02_노크",
+   "show": "진행 == 25"
+  },
+  {
+   "id": "hans_leave",
+   "x": 6,
+   "y": 9,
+   "trigger": "talk",
+   "sprite": "hans",
+   "dir": "up",
+   "label": "M02_노크",
+   "show": "진행 == 26"
   }
  ]
 }

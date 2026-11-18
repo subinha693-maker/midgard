@@ -118,6 +118,102 @@
     "y": 12,
     "dir": "up"
    }
+  },
+  {
+   "id": "auto",
+   "x": 0,
+   "y": 0,
+   "trigger": "autorun",
+   "pages": [
+    {
+     "if": "진행 >= 52 && !보호비_봄",
+     "label": "M05_보호비"
+    }
+   ]
+  },
+  {
+   "id": "merchant",
+   "x": 9,
+   "y": 7,
+   "trigger": "talk",
+   "sprite": "npc_merchant",
+   "dir": "down",
+   "label": "M05_상인"
+  },
+  {
+   "id": "collector1",
+   "x": 9,
+   "y": 8,
+   "trigger": "talk",
+   "sprite": "npc_collector",
+   "dir": "up",
+   "label": "M05_상인",
+   "show": "!보호비_봄"
+  },
+  {
+   "id": "collector2",
+   "x": 10,
+   "y": 8,
+   "trigger": "talk",
+   "sprite": "npc_collector",
+   "dir": "up",
+   "label": "M05_상인",
+   "show": "!보호비_봄"
+  },
+  {
+   "id": "vendor",
+   "x": 19,
+   "y": 13,
+   "trigger": "talk",
+   "sprite": "npc_vendor",
+   "dir": "up",
+   "label": "M05_캡슐노점"
+  },
+  {
+   "id": "unmarked1",
+   "x": 6,
+   "y": 9,
+   "trigger": "talk",
+   "sprite": "npc_unmarked",
+   "dir": "right",
+   "label": "M05_명찰없음",
+   "route": [
+    "right*3",
+    "wait 1",
+    "left*3",
+    "wait 1"
+   ]
+  },
+  {
+   "id": "unmarked2",
+   "x": 21,
+   "y": 10,
+   "trigger": "talk",
+   "sprite": "npc_unmarked",
+   "dir": "left",
+   "label": "M05_명찰없음",
+   "route": [
+    "left*2",
+    "wait 1.5",
+    "right*2",
+    "wait 1.5"
+   ]
+  },
+  {
+   "id": "sia_woman",
+   "x": 15,
+   "y": 9,
+   "trigger": "talk",
+   "sprite": "npc_sia_woman",
+   "dir": "down",
+   "label": "M05_명찰없음"
+  },
+  {
+   "id": "busstop",
+   "x": 25,
+   "y": 8,
+   "trigger": "talk",
+   "label": "M05_정류장"
   }
  ]
 }

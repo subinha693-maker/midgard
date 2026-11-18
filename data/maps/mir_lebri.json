@@ -88,6 +88,37 @@
     "y": 5,
     "dir": "down"
    }
+  },
+  {
+   "id": "auto",
+   "x": 0,
+   "y": 0,
+   "trigger": "autorun",
+   "pages": [
+    {
+     "if": "진행 >= 52 && 진행 < 55",
+     "label": "M05_레브리"
+    }
+   ]
+  },
+  {
+   "id": "rotte",
+   "x": 6,
+   "y": 5,
+   "trigger": "talk",
+   "sprite": "npc_rotte",
+   "dir": "down",
+   "label": "M05_로테"
+  },
+  {
+   "id": "hans_lebri",
+   "x": 11,
+   "y": 2,
+   "trigger": "talk",
+   "sprite": "hans",
+   "dir": "down",
+   "label": "M05_한스_평소",
+   "show": "진행 >= 56"
   }
  ]
 }

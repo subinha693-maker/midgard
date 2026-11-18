@@ -86,3 +86,16 @@ export function blocker(scene: Phaser.Scene, w: number, h: number, onTap?: () =>
   });
   return z;
 }
+
+/**
+ * 화면 부품을 지운다. 지우기 전에 터치 입력부터 해제한다
+ * (입력 처리 도중에 지운 물체가 입력 목록에 남아 이후 탭을 가로채는 문제 방지)
+ */
+export function clearObjects(list: Phaser.GameObjects.GameObject[]): void {
+  const walk = (o: Phaser.GameObjects.GameObject) => {
+    if (o.input) o.removeInteractive();
+    if (o instanceof Phaser.GameObjects.Container) o.list.forEach(walk);
+  };
+  list.forEach(walk);
+  [...list].forEach((o) => o.destroy());
+}

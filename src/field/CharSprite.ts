@@ -16,6 +16,7 @@ export class CharSprite {
   moving = false;
   visible = true;
   private sheet: SheetInfo | null = null;
+  private isTile = false;
   private animT = 0;
   private animI = 0;
 
@@ -29,9 +30,18 @@ export class CharSprite {
   }
 
   setSheet(key: string | undefined): void {
+    // "tile:이름" → 사람 대신 타일 한 장 (쌓인 신문, 접시 등 조사 대상)
+    if (key?.startsWith('tile:')) {
+      this.sheet = null;
+      this.isTile = true;
+      this.sprite.setTexture('tiles', key.slice(5)).setScale(1).setVisible(this.visible);
+      return;
+    }
+    this.isTile = false;
     this.sheet = key ? sheetInfo(key) : null;
     if (this.sheet) {
       this.sprite.setTexture(this.sheet.texture);
+      this.sprite.setScale(this.sheet.scale);
       this.sprite.setVisible(this.visible);
     } else this.sprite.setVisible(false);
     this.setFrame(false);
@@ -39,7 +49,7 @@ export class CharSprite {
 
   setVisible(on: boolean): void {
     this.visible = on;
-    this.sprite.setVisible(on && !!this.sheet);
+    this.sprite.setVisible(on && (!!this.sheet || this.isTile));
   }
 
   face(d: Dir): void {
@@ -49,7 +59,7 @@ export class CharSprite {
 
   /** 픽셀 위치를 격자에 맞춤 */
   place(): void {
-    this.sprite.setPosition(this.gx * T + T / 2, (this.gy + 1) * T - FIELD.spriteFootOffset);
+    this.sprite.setPosition(this.gx * T + T / 2, (this.gy + 1) * T - (this.isTile ? 0 : FIELD.spriteFootOffset));
     this.sprite.setDepth(this.gy * 10 + 5);
   }
 
