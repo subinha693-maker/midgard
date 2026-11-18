@@ -1,0 +1,43 @@
+{
+ "name": "바다",
+ "indoor": false,
+ "legend": {
+  "V": "boat",
+  "W": {
+   "tile": "water_deep",
+   "block": true
+  }
+ },
+ "ground": [
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWVWWWWWWWWWWW",
+  "WWWWWWWWWWVVVWWWWWWWWWW",
+  "WWWWWWWWWWVVVWWWWWWWWWW",
+  "WWWWWWWWWWVVVWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWW"
+ ],
+ "objects": [
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       ",
+  "                       "
+ ],
+ "props": [],
+ "events": []
+}

@@ -1,0 +1,87 @@
+{
+ "name": "클로토의 집 · 2층",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  ".": "rb:12,13",
+  "A": {
+   "tile": "rb:1,13",
+   "block": true
+  },
+  "a": {
+   "tile": "rb:1,14",
+   "block": true
+  },
+  "q": "stairs"
+ },
+ "ground": [
+  "#AAAAAAAAAA#",
+  "#aaaaaaaaaa#",
+  "#..........#",
+  "#..........#",
+  "#..........#",
+  "#..........#",
+  "#..........#",
+  "#........q.#",
+  "############"
+ ],
+ "objects": [
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            "
+ ],
+ "props": [
+  {
+   "prop": "window_curtain",
+   "x": 5,
+   "y": 1
+  },
+  {
+   "prop": "bed_white",
+   "x": 2,
+   "y": 2
+  },
+  {
+   "prop": "bookshelf",
+   "x": 7,
+   "y": 2
+  },
+  {
+   "prop": "table_light",
+   "x": 7,
+   "y": 4
+  },
+  {
+   "prop": "chair_back",
+   "x": 7,
+   "y": 6
+  },
+  {
+   "prop": "rug_small",
+   "x": 3,
+   "y": 5
+  }
+ ],
+ "events": [
+  {
+   "id": "to_erisia_home_1f_9_7",
+   "x": 9,
+   "y": 7,
+   "transfer": {
+    "map": "erisia_home_1f",
+    "x": 2,
+    "y": 9,
+    "dir": "right"
+   }
+  }
+ ]
+}

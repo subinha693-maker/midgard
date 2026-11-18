@@ -1,0 +1,94 @@
+{
+ "name": "아르고 정기선 · 갑판",
+ "indoor": false,
+ "legend": {
+  "D": {
+   "tile": "rb:1,17",
+   "block": true
+  },
+  "W": {
+   "tile": "water_deep",
+   "block": true
+  },
+  "d": {
+   "tile": "rb:1,18",
+   "block": true
+  },
+  "k": "deck",
+  "l": {
+   "tile": "rail",
+   "block": true
+  },
+  "p": {
+   "tile": "mast",
+   "block": true
+  },
+  "v": {
+   "tile": "barrel",
+   "block": true
+  },
+  "x": {
+   "tile": "crate",
+   "block": true
+  },
+  "y": {
+   "tile": "buoy",
+   "block": true
+  }
+ },
+ "ground": [
+  "WWWyWWWWyWWWWyWWWWyWWWWW",
+  "WllllllllllllllllllllllW",
+  "WlDDDDDkkkkkkkkkkkkkkklW",
+  "WldddddkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WlkkkkkkkkkkkkkkkkkkkklW",
+  "WllllllllllllllllllllllW",
+  "WWWWWWWWWWWWWWWWWWWWWWWW"
+ ],
+ "objects": [
+  "                        ",
+  "                        ",
+  "                        ",
+  "                  v     ",
+  "                        ",
+  "                        ",
+  "            p           ",
+  "                        ",
+  "                        ",
+  "         xx             ",
+  "                        ",
+  "                        ",
+  "                        "
+ ],
+ "props": [],
+ "events": [
+  {
+   "id": "to_argo_cabin_4_4",
+   "x": 4,
+   "y": 4,
+   "transfer": {
+    "map": "argo_cabin",
+    "x": 5,
+    "y": 5,
+    "dir": "up"
+   }
+  },
+  {
+   "id": "to_noggria_port_2_6",
+   "x": 2,
+   "y": 6,
+   "transfer": {
+    "map": "noggria_port",
+    "x": 15,
+    "y": 7,
+    "dir": "left"
+   }
+  }
+ ]
+}

@@ -14,7 +14,9 @@
 | 걸음 도트 시트의 반짝이 표시(워터마크) | 1000023035·1000023036·1000023037 의 오른쪽 아래 칸 | — | 위 방향 마지막 프레임에 작게 남음 |
 | 전투 상태바 얼굴 자르기 영역 | `data/portraits.json` `faceCrop` | 원본 픽셀, 기본 표정 기준 | 눈대중 값, P3에서 조정 |
 | 다른 NPC 걸음 도트 (로테, 시험관, 선원, 소매치기, 마을 사람 등) | `assets/placeholder/` | 48px 칸 | P4에서 임시 그래픽 |
-| 타일 | `src/core/tiles.ts` (코드로 그림) | 48px | 임시. 외부 팩(`assets/thirdparty/`) 적용은 P4에서 |
+| 바깥 타일 (에리시아·미르·배·바다) | `src/core/tiles.ts` (코드로 그림) | 48px | 임시. 실내는 Modern Interiors 적용 (`rb:`·`data/props.json`) |
+| 부엌 가구 | `data/props.json` | — | 무료판에 부엌 가구가 없어 사무용 서랍장(counter)으로 대신함 |
+| 받은 몬스터 그림 2차 (5장) | `assets/user/enemies/` | — | 채팅 이미지로만 와서 파일 저장 안 됨 → 다시 첨부 필요 |
 | 적 그래픽 | `assets/user/enemies/monster_1~5.png` → `data/db/enemies.json` 의 image | 투명 배경 PNG | 원형=1, 야형=4, 못 이기는 전투 테스트=3, 2·5는 이름 미정(TODO(임시이름)) — 배치는 사용자 확인 필요 |
 | 전투 테두리 문양 | `src/ui/widgets.ts` panel | — | 나중에 새로 만들 예정 → 지금은 단순 사각 테두리 |
 | 음악·효과음 | — | — | 이번 범위 제외 (`@bgm`, `@se` 는 받아만 둠) |

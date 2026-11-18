@@ -1,0 +1,76 @@
+{
+ "name": "빵집",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  ":": "rb:12,7",
+  "E": {
+   "tile": "rb:1,7",
+   "block": true
+  },
+  "e": {
+   "tile": "rb:1,8",
+   "block": true
+  }
+ },
+ "ground": [
+  "#EEEEEEEEEE#",
+  "#eeeeeeeeee#",
+  "#::::::::::#",
+  "#::::::::::#",
+  "#::::::::::#",
+  "#::::::::::#",
+  "#::::::::::#",
+  "#::::::::::#",
+  "#####:######"
+ ],
+ "objects": [
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            ",
+  "            "
+ ],
+ "props": [
+  {
+   "prop": "shop_shelves",
+   "x": 6,
+   "y": 2
+  },
+  {
+   "prop": "counter",
+   "x": 2,
+   "y": 4
+  },
+  {
+   "prop": "window",
+   "x": 2,
+   "y": 1
+  },
+  {
+   "prop": "vase",
+   "x": 9,
+   "y": 6
+  }
+ ],
+ "events": [
+  {
+   "id": "to_erisia_town_5_8",
+   "x": 5,
+   "y": 8,
+   "transfer": {
+    "map": "erisia_town",
+    "x": 15,
+    "y": 4,
+    "dir": "down"
+   }
+  }
+ ]
+}

@@ -1,6 +1,11 @@
 // 맵 파일(data/maps/*.json) 읽기 — 형식은 docs/map_format.md
 // 바닥·물체 레이어는 ASCII 격자, 문자 → 타일 대응표(legend)는 맵 파일 안에 둔다.
 import type { Dir } from '../core/state';
+import propsJson from '../../data/props.json';
+
+export interface PropDef { src: string; rect: [number, number, number, number]; foot: [number, number]; flat?: boolean; wall?: boolean; counter?: boolean }
+export const PROPS = Object.fromEntries(Object.entries(propsJson).filter(([k]) => !k.startsWith('_'))) as unknown as Record<string, PropDef>;
+export interface PlacedProp { prop: string; x: number; y: number }
 
 export interface LegendEntry { tile: string; block?: boolean; above?: boolean }
 
@@ -30,8 +35,10 @@ export interface MapData {
   ground: (string | null)[][];
   objects: (string | null)[][];
   above: boolean[][]; // 캐릭터보다 위에 그릴 물체
+  counter: boolean[][]; // 계산대: 너머의 사람에게 말을 걸 수 있음
   block: boolean[][];
   events: MapEvent[];
+  props: PlacedProp[];
 }
 
 export class MapError extends Error {}
@@ -44,6 +51,7 @@ interface RawMap {
   ground: string[];
   objects?: string[];
   events?: Partial<MapEvent>[] & { label?: string }[];
+  props?: PlacedProp[];
 }
 
 export function parseMap(raw: unknown, id: string): MapData {
@@ -78,6 +86,24 @@ export function parseMap(raw: unknown, id: string): MapData {
   if (m.objects && m.objects.length !== h) errs.push(`objects 행 수 ${m.objects.length} ≠ ${h}`);
 
   const block = g.map((row, y) => row.map((c, x) => !!c?.block || !!o[y][x]?.block));
+  const counter = g.map((row) => row.map(() => false));
+  const props = m.props ?? [];
+  for (const p of props) {
+    const d = PROPS[p.prop];
+    if (!d) {
+      errs.push(`없는 소품 "${p.prop}"`);
+      continue;
+    }
+    if (d.flat || d.wall) continue;
+    for (let yy = p.y; yy < p.y + d.foot[1]; yy++)
+      for (let xx = p.x; xx < p.x + d.foot[0]; xx++) {
+        if (yy < 0 || xx < 0 || yy >= h || xx >= w) errs.push(`소품 ${p.prop} (${p.x},${p.y}) 가 맵 밖`);
+        else {
+          block[yy][xx] = true;
+          if (d.counter) counter[yy][xx] = true;
+        }
+      }
+  }
   const above = o.map((row) => row.map((c) => !!c?.above));
 
   const events: MapEvent[] = (m.events ?? []).map((e: Partial<MapEvent> & { label?: string }, i) => {
@@ -111,8 +137,10 @@ export function parseMap(raw: unknown, id: string): MapData {
     ground: g.map((r) => r.map((c) => c?.tile ?? null)),
     objects: o.map((r) => r.map((c) => c?.tile ?? null)),
     above,
+    counter,
     block,
     events,
+    props,
   };
 }
 

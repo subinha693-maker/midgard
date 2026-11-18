@@ -33,3 +33,11 @@ for (const m of maps.values())
   for (const ev of m.events) for (const pg of ev.pages) targets.push({ file: `data/maps/${m.id}.json`, line: 0, label: pg.label });
 library.validate(targets);
 contentErrors.push(...library.errors);
+
+/** 맵들이 쓰는 외부 시트 타일 ("rb:1,13" 형식) 목록 */
+export function sheetTileRefs(): string[] {
+  const out: string[] = [];
+  for (const m of maps.values())
+    for (const layer of [m.ground, m.objects]) for (const row of layer) for (const t of row) if (t && t.includes(':')) out.push(t);
+  return out;
+}

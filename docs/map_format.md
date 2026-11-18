@@ -23,7 +23,9 @@
 - legend 값이 문자열이면 타일 이름만, 객체면 `block`(통행 불가), `above`(캐릭터보다 위에 그림).
 - `indoor: true` 면 시간대 색조를 적용하지 않는다.
 - `hospital: { "map": "id", "x": 3, "y": 4 }` 이 맵 근처에서 전투에 지면 깨어날 병원 (없으면 그 자리)
-- 타일 이름은 `src/core/tiles.ts` (임시 타일). 실제 타일셋이 정해지면 교체.
+- 타일 이름은 `src/core/tiles.ts` 의 코드 타일 이름, 또는 외부 시트 칸 `"시트:열,행"` (예: `"rb:1,13"` = Modern Interiors Room Builder 의 1열 13행). 시트는 `src/core/sheets.ts`.
+- `props`: 여러 칸짜리 소품 `{ "prop": "bed_white", "x": 2, "y": 2 }` — 이름은 `data/props.json` (시트 픽셀 영역, 차지하는 칸, `flat` 바닥 깔개, `wall` 벽 장식, `counter` 계산대: 너머 사람에게 말 걸기).
+- 챕터 1 맵은 `tools/maps/build_maps.py` 로 만든다 (스크립트를 다시 돌리면 덮어씀).
 
 ## 이벤트
 

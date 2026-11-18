@@ -1,0 +1,93 @@
+{
+ "name": "레브리",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  "A": {
+   "tile": "rb:1,13",
+   "block": true
+  },
+  "a": {
+   "tile": "rb:1,14",
+   "block": true
+  },
+  "r": "rb:12,5"
+ },
+ "ground": [
+  "#AAAAAAAAAAAA#",
+  "#aaaaaaaaaaaa#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "#rrrrrrrrrrrr#",
+  "######r#######"
+ ],
+ "objects": [
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              ",
+  "              "
+ ],
+ "props": [
+  {
+   "prop": "table_dark",
+   "x": 3,
+   "y": 4
+  },
+  {
+   "prop": "table_dark",
+   "x": 8,
+   "y": 4
+  },
+  {
+   "prop": "rack",
+   "x": 2,
+   "y": 2
+  },
+  {
+   "prop": "rack",
+   "x": 11,
+   "y": 2
+  },
+  {
+   "prop": "bookshelf2",
+   "x": 5,
+   "y": 2
+  },
+  {
+   "prop": "door",
+   "x": 11,
+   "y": 1
+  },
+  {
+   "prop": "heater",
+   "x": 8,
+   "y": 7
+  }
+ ],
+ "events": [
+  {
+   "id": "to_mir_hammer_6_9",
+   "x": 6,
+   "y": 9,
+   "transfer": {
+    "map": "mir_hammer",
+    "x": 11,
+    "y": 5,
+    "dir": "down"
+   }
+  }
+ ]
+}

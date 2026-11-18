@@ -1,0 +1,121 @@
+{
+ "name": "에리시아 지방시청",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  ";": "rb:15,11",
+  "B": {
+   "tile": "rb:1,19",
+   "block": true
+  },
+  "P": {
+   "tile": "poster",
+   "block": true
+  },
+  "b": {
+   "tile": "rb:1,20",
+   "block": true
+  }
+ },
+ "ground": [
+  "#BBBBBBBBBBBBBB#",
+  "#bbbbbbbbbbbbbb#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#;;;;;;;;;;;;;;#",
+  "#######;########"
+ ],
+ "objects": [
+  "                ",
+  "          P     ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                "
+ ],
+ "props": [
+  {
+   "prop": "counter",
+   "x": 5,
+   "y": 4
+  },
+  {
+   "prop": "window",
+   "x": 7,
+   "y": 1
+  },
+  {
+   "prop": "rug_red_v",
+   "x": 6,
+   "y": 6
+  },
+  {
+   "prop": "door",
+   "x": 2,
+   "y": 1
+  },
+  {
+   "prop": "door",
+   "x": 13,
+   "y": 1
+  },
+  {
+   "prop": "vase",
+   "x": 1,
+   "y": 2
+  },
+  {
+   "prop": "sofa",
+   "x": 11,
+   "y": 7
+  }
+ ],
+ "events": [
+  {
+   "id": "to_erisia_town_7_10",
+   "x": 7,
+   "y": 10,
+   "transfer": {
+    "map": "erisia_town",
+    "x": 27,
+    "y": 5,
+    "dir": "down"
+   }
+  },
+  {
+   "id": "to_erisia_testground_2_2",
+   "x": 2,
+   "y": 2,
+   "transfer": {
+    "map": "erisia_testground",
+    "x": 10,
+    "y": 1,
+    "dir": "down"
+   }
+  },
+  {
+   "id": "to_erisia_clinic_13_2",
+   "x": 13,
+   "y": 2,
+   "transfer": {
+    "map": "erisia_clinic",
+    "x": 4,
+    "y": 5,
+    "dir": "up"
+   }
+  }
+ ]
+}

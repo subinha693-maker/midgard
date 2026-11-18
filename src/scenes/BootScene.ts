@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import { preloadPortraits, registerPortraitFrames } from '../core/portraits';
 import { buildSprites, preloadSprites } from '../core/sprites';
 import { buildTiles } from '../core/tiles';
+import { preloadSheets, SHEETS } from '../core/sheets';
+import { sheetTileRefs } from '../scenario/content';
+import { PROPS } from '../field/mapdata';
 import { preloadIllustrations } from './CGScene';
 import { ENEMIES } from '../core/db';
 import { assetUrl } from '../core/assets';
@@ -17,6 +20,7 @@ export class BootScene extends Phaser.Scene {
     preloadPortraits(this);
     preloadSprites(this);
     preloadIllustrations(this);
+    preloadSheets(this);
     // 적 그림 (enemies.json 의 image)
     for (const [k, e] of Object.entries(ENEMIES)) {
       if (!e.image) continue;
@@ -29,7 +33,13 @@ export class BootScene extends Phaser.Scene {
   create(): void {
     registerPortraitFrames(this);
     buildSprites(this);
-    buildTiles(this);
+    buildTiles(this, sheetTileRefs());
+    // 소품 프레임 등록
+    for (const [name, d] of Object.entries(PROPS)) {
+      const key = 'sheet:' + d.src;
+      if (!this.textures.exists(key) || !SHEETS[d.src]) continue;
+      this.textures.get(key).add('prop:' + name, 0, ...d.rect);
+    }
     this.scene.start('Title');
   }
 }

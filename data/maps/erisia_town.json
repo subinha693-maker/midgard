@@ -1,0 +1,165 @@
+{
+ "name": "노그리아 에리시아",
+ "indoor": false,
+ "legend": {
+  ",": "grass",
+  "=": "stone_road",
+  "F": {
+   "tile": "facade_window",
+   "block": true
+  },
+  "G": {
+   "tile": "speaker_post",
+   "block": true
+  },
+  "L": {
+   "tile": "roof_slate",
+   "block": true
+  },
+  "P": {
+   "tile": "poster",
+   "block": true
+  },
+  "Q": {
+   "tile": "facade_shop",
+   "block": true
+  },
+  "R": {
+   "tile": "roof_red",
+   "block": true
+  },
+  "S": {
+   "tile": "facade",
+   "block": true
+  },
+  "Y": {
+   "tile": "lamp",
+   "block": true
+  },
+  "c": "cobble",
+  "n": "facade_door",
+  "t": {
+   "tile": "tree",
+   "block": true
+  },
+  "u": {
+   "tile": "bench",
+   "block": true
+  },
+  "w": {
+   "tile": "flowerbed",
+   "block": true
+  }
+ },
+ "ground": [
+  ",RRRRRRRR,,,RRRRRRR,,,LLLLLLLLLLL,",
+  ",RRRRRRRR,,,RRRRRRR,,,LLLLLLLLLLL,",
+  ",RRRRRRRR,,,RRRRRRR,,,LLLLLLLLLLL,",
+  ",FFFnFFFF,,,QQQnQQQ,,,LLLLLLLLLLL,",
+  ",,,,,,,,,,,,,,,,,,,,,,FFFFSnSFFFF,",
+  "==================================",
+  "==================================",
+  ",,,,,,,,,==,,,,,,,,,,,,,,,,,,,,,,,",
+  ",,,,,,,,,==,cccccccccc,,,,,,,,,,,,",
+  ",LLLLLLL,==,cccccccccc,RRRRRRRRR,,",
+  ",LLLLLLL,==,cccccccccc,RRRRRRRRR,,",
+  ",SSSSSSS,==,cccccccccc,FFFFFFFFF,,",
+  ",SSSSSSS,==,cccccccccc,FFFFFFFFF,,",
+  ",,,,,,,,,==,cccccccccc,,,,,,,,,,,,",
+  ",,,,,,,,,==,,,,,,,,,,,,,,,,,,,,,,,",
+  ",,,,,,,,,=========================",
+  ",,,,,,,,,=========================",
+  ",RRRRRR,,==,,,,,,,,,,,,,,,,,,,,,,,",
+  ",RRRRRR,,==,,LLLLLLLL,,,,,,,,,,,,,",
+  ",FFFFFF,,==,,LLLLLLLL,,,,,,,,,,,,,",
+  ",FFFFFF,,==,,FFFFFFFF,,,,,,,,,,,,,",
+  ",,,,,,,,,==,,,,,,,,,,,,,,,,,,,,,,,"
+ ],
+ "objects": [
+  "                                  ",
+  "                                  ",
+  "                                  ",
+  "                                  ",
+  "          Y         Y             ",
+  "                                  ",
+  "                                  ",
+  "                            t Y   ",
+  "t       t   w        w            ",
+  "                G                 ",
+  "                                  ",
+  "                                  ",
+  "  P P P      u     u              ",
+  "                               t  ",
+  "                        t         ",
+  "                                  ",
+  "                                  ",
+  "                                  ",
+  "           t          t         t ",
+  "                                  ",
+  "                                  ",
+  "                                  "
+ ],
+ "props": [],
+ "events": [
+  {
+   "id": "to_erisia_home_1f_4_3",
+   "x": 4,
+   "y": 3,
+   "transfer": {
+    "map": "erisia_home_1f",
+    "x": 6,
+    "y": 10,
+    "dir": "up"
+   }
+  },
+  {
+   "id": "to_erisia_bakery_15_3",
+   "x": 15,
+   "y": 3,
+   "transfer": {
+    "map": "erisia_bakery",
+    "x": 5,
+    "y": 7,
+    "dir": "up"
+   }
+  },
+  {
+   "id": "to_erisia_cityhall_27_4",
+   "x": 27,
+   "y": 4,
+   "transfer": {
+    "map": "erisia_cityhall",
+    "x": 7,
+    "y": 9,
+    "dir": "up"
+   }
+  },
+  {
+   "id": "to_noggria_port_33_15",
+   "x": 33,
+   "y": 15,
+   "transfer": {
+    "map": "noggria_port",
+    "x": 1,
+    "y": 7,
+    "dir": "right"
+   }
+  },
+  {
+   "id": "to_noggria_port_33_16",
+   "x": 33,
+   "y": 16,
+   "transfer": {
+    "map": "noggria_port",
+    "x": 1,
+    "y": 8,
+    "dir": "right"
+   }
+  }
+ ],
+ "hospital": {
+  "map": "erisia_town",
+  "x": 27,
+  "y": 6
+ }
+}

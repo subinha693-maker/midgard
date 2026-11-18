@@ -62,7 +62,7 @@
    "transfer": {
     "map": "test",
     "x": 20,
-    "y": 10,
+    "y": 11,
     "dir": "left"
    }
   },

@@ -1,0 +1,120 @@
+{
+ "name": "미르 · 북항",
+ "indoor": false,
+ "legend": {
+  "%": {
+   "tile": "bus_stop",
+   "block": true
+  },
+  "H": {
+   "tile": "barred_window",
+   "block": true
+  },
+  "I": "iron_plate",
+  "K": {
+   "tile": "patched_wall",
+   "block": true
+  },
+  "O": "rubble",
+  "W": {
+   "tile": "water_deep",
+   "block": true
+  },
+  "X": {
+   "tile": "sea_wall",
+   "block": true
+  },
+  "h": {
+   "tile": "hull",
+   "block": true
+  },
+  "j": {
+   "tile": "laundry",
+   "above": true
+  },
+  "k": "deck",
+  "o": "concrete",
+  "p": {
+   "tile": "mast",
+   "block": true
+  },
+  "v": {
+   "tile": "barrel",
+   "block": true
+  },
+  "x": {
+   "tile": "crate",
+   "block": true
+  },
+  "z": {
+   "tile": "siren",
+   "above": true
+  }
+ },
+ "ground": [
+  "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "oKKKKKKKKKKKKKKKKKKKKKKKKo",
+  "oKKKKKKKKKoOOoKKKKKKKKKKKo",
+  "oHHHHHHHHHoOOoHHHHHHHHHHHo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "oooooooooooooooooooooooooo",
+  "IIIIIIIIIIIIIIIIIIIIIIIIII",
+  "WWWWWhhhhhhhhhhWWWWWWWWWWW",
+  "WWWWWhkkkkkkkkhWWWWWWWWWWW",
+  "WWWWWhkkkkkkkkhWWWWWWWWWWW"
+ ],
+ "objects": [
+  "                          ",
+  "                          ",
+  "   z               z      ",
+  "                          ",
+  "                          ",
+  " jjjjjjjjj    jjjjjjjjjjj ",
+  "                          ",
+  "                          ",
+  "                          ",
+  "    %               xx    ",
+  "                      v   ",
+  "  v                       ",
+  "                          ",
+  "                          ",
+  "          p               ",
+  "                          "
+ ],
+ "props": [],
+ "events": [
+  {
+   "id": "to_mir_market_25_7",
+   "x": 25,
+   "y": 7,
+   "transfer": {
+    "map": "mir_market",
+    "x": 1,
+    "y": 8,
+    "dir": "right"
+   }
+  },
+  {
+   "id": "to_mir_market_25_8",
+   "x": 25,
+   "y": 8,
+   "transfer": {
+    "map": "mir_market",
+    "x": 1,
+    "y": 9,
+    "dir": "right"
+   }
+  }
+ ],
+ "hospital": {
+  "map": "mir_market",
+  "x": 3,
+  "y": 8
+ }
+}

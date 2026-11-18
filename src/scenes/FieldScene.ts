@@ -13,7 +13,7 @@ import type { BattleResult } from './BattleScene';
 import { game, type Dir } from '../core/state';
 import { TILE_INDEX } from '../core/tiles';
 import { CharSprite, DIR_VEC } from '../field/CharSprite';
-import { expandRoute, type MapData, type MapEvent } from '../field/mapdata';
+import { expandRoute, PROPS, type MapData, type MapEvent } from '../field/mapdata';
 import { findPath } from '../field/pathfind';
 import { evaluate } from '../scenario/cond';
 import { letters, library, maps } from '../scenario/content';
@@ -48,6 +48,7 @@ export class FieldScene extends Phaser.Scene implements Host {
   private npcs = new Map<string, Npc>();
   private layers: Phaser.Tilemaps.TilemapLayer[] = [];
   private tilemaps: Phaser.Tilemaps.Tilemap[] = [];
+  private propImages: Phaser.GameObjects.Image[] = [];
   runner!: Runner;
   private parallel = new Set<string>();
   private path: { x: number; y: number }[] = [];
@@ -133,6 +134,8 @@ export class FieldScene extends Phaser.Scene implements Host {
     this.tilemaps.forEach((t) => t.destroy());
     this.layers = [];
     this.tilemaps = [];
+    this.propImages.forEach((i) => i.destroy());
+    this.propImages = [];
     this.npcs.forEach((n) => n.ch.destroy());
     this.npcs.clear();
     this.parallel.clear();
@@ -155,6 +158,15 @@ export class FieldScene extends Phaser.Scene implements Host {
     addLayer(m.ground, () => -10);
     addLayer(m.objects, () => -5, (xx, yy) => !m.above[yy][xx]);
     addLayer(m.objects, () => 1e5, (xx, yy) => m.above[yy][xx]);
+
+    // 소품 (data/props.json)
+    for (const p of m.props) {
+      const d = PROPS[p.prop];
+      if (!d || !this.textures.exists('sheet:' + d.src)) continue;
+      const img = this.add.image((p.x + d.foot[0] / 2) * T, (p.y + d.foot[1]) * T, 'sheet:' + d.src, 'prop:' + p.prop).setOrigin(0.5, 1);
+      img.setDepth(d.flat ? -6 : d.wall ? -4 : (p.y + d.foot[1] - 1) * 10 + 4);
+      this.propImages.push(img);
+    }
 
     this.player = new CharSprite(this, game.state.playerSprite, x, y, dir);
     for (const ev of m.events) {
@@ -324,6 +336,11 @@ export class FieldScene extends Phaser.Scene implements Host {
     if (this.busy || this.player.moving || this.time.now < this.inputCooldownUntil) return;
     const [fx, fy] = this.player.front();
     const cands = [...this.eventsAt(fx, fy), ...this.eventsAt(this.player.gx, this.player.gy).filter((n) => !n.ev.sprite)];
+    // 계산대 너머의 사람
+    if (this.map.counter[fy]?.[fx]) {
+      const [dx, dy] = DIR_VEC[this.player.dir];
+      cands.push(...this.eventsAt(fx + dx, fy + dy));
+    }
     for (const n of cands) if (n.ev.trigger === 'talk' && this.trigger(n)) return;
   }
 
@@ -341,15 +358,21 @@ export class FieldScene extends Phaser.Scene implements Host {
     if (talk || !this.passable(tx, ty)) {
       // 말 걸 대상 → 옆 칸까지 가서 바라보고 조사
       if (!talk) return;
-      if (Math.abs(tx - here.x) + Math.abs(ty - here.y) === 1) {
+      const across = Math.abs(tx - here.x) + Math.abs(ty - here.y) === 2 && (tx === here.x || ty === here.y) && this.map.counter[(ty + here.y) / 2]?.[(tx + here.x) / 2];
+      if (Math.abs(tx - here.x) + Math.abs(ty - here.y) === 1 || across) {
         this.player.face(tx < here.x ? 'left' : tx > here.x ? 'right' : ty < here.y ? 'up' : 'down');
         this.tryInteract();
         return;
       }
       let best: { x: number; y: number }[] | null = null;
       for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]]) {
-        const ax = tx + dx;
-        const ay = ty + dy;
+        let ax = tx + dx;
+        let ay = ty + dy;
+        // 계산대 너머: 한 칸 더 떨어진 곳에서 말을 건다
+        if (this.map.counter[ay]?.[ax]) {
+          ax += dx;
+          ay += dy;
+        }
         if (!this.passable(ax, ay) && !(ax === here.x && ay === here.y)) continue;
         const pth = findPath(this.map.w, this.map.h, (x, y) => this.passable(x, y), here, { x: ax, y: ay }, FIELD.pathMaxNodes);
         if (pth && (!best || pth.length < best.length)) best = pth;

@@ -1,0 +1,100 @@
+{
+ "name": "미르 · 망치골목",
+ "indoor": false,
+ "legend": {
+  "H": {
+   "tile": "barred_window",
+   "block": true
+  },
+  "K": {
+   "tile": "patched_wall",
+   "block": true
+  },
+  "j": {
+   "tile": "laundry",
+   "above": true
+  },
+  "n": "facade_door",
+  "o": "concrete",
+  "s": {
+   "tile": "sign",
+   "block": true
+  },
+  "v": {
+   "tile": "barrel",
+   "block": true
+  },
+  "x": {
+   "tile": "crate",
+   "block": true
+  }
+ },
+ "ground": [
+  "KKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKK",
+  "HHHHHHHHHHHHHHHHHHHHHH",
+  "HHHHHHHHHHKnKHHHHHHHHH",
+  "oooooooooooooooooooooo",
+  "oooooooooooooooooooooo",
+  "oooooooooooooooooooooo",
+  "oooooooooooooooooooooo",
+  "HHHHHHHHHHooHHHHHHHHHH",
+  "KKKKKKKKKKooKKKKKKKKKK",
+  "KKKKKKKKKKooKKKKKKKKKK",
+  "oooooooooooooooooooooo",
+  "oooooooooooooooooooooo"
+ ],
+ "objects": [
+  "                      ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "   s   s    s s   s   ",
+  "jjjjjjjjjjjjjjjjjjjjjj",
+  "  v                xx ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "                      "
+ ],
+ "props": [],
+ "events": [
+  {
+   "id": "to_mir_lebri_11_4",
+   "x": 11,
+   "y": 4,
+   "transfer": {
+    "map": "mir_lebri",
+    "x": 6,
+    "y": 8,
+    "dir": "up"
+   }
+  },
+  {
+   "id": "to_mir_market_10_13",
+   "x": 10,
+   "y": 13,
+   "transfer": {
+    "map": "mir_market",
+    "x": 13,
+    "y": 1,
+    "dir": "down"
+   }
+  },
+  {
+   "id": "to_mir_market_11_13",
+   "x": 11,
+   "y": 13,
+   "transfer": {
+    "map": "mir_market",
+    "x": 13,
+    "y": 1,
+    "dir": "down"
+   }
+  }
+ ]
+}

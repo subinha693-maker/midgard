@@ -1,0 +1,72 @@
+{
+ "name": "지방시청 · 의무실",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  "M": {
+   "tile": "rb:1,9",
+   "block": true
+  },
+  "_": "rb:12,9",
+  "m": {
+   "tile": "rb:1,10",
+   "block": true
+  }
+ },
+ "ground": [
+  "#MMMMMMM#",
+  "#mmmmmmm#",
+  "#_______#",
+  "#_______#",
+  "#_______#",
+  "#_______#",
+  "####_####"
+ ],
+ "objects": [
+  "         ",
+  "         ",
+  "         ",
+  "         ",
+  "         ",
+  "         ",
+  "         "
+ ],
+ "props": [
+  {
+   "prop": "bed_single",
+   "x": 6,
+   "y": 2
+  },
+  {
+   "prop": "tv",
+   "x": 2,
+   "y": 2
+  },
+  {
+   "prop": "rack",
+   "x": 3,
+   "y": 2
+  },
+  {
+   "prop": "stool",
+   "x": 4,
+   "y": 3
+  }
+ ],
+ "events": [
+  {
+   "id": "to_erisia_cityhall_4_6",
+   "x": 4,
+   "y": 6,
+   "transfer": {
+    "map": "erisia_cityhall",
+    "x": 13,
+    "y": 3,
+    "dir": "down"
+   }
+  }
+ ]
+}

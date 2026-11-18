@@ -1,0 +1,125 @@
+{
+ "name": "TODO(미정) 노그리아 항구",
+ "indoor": false,
+ "legend": {
+  ">": "gangway",
+  "F": {
+   "tile": "facade_window",
+   "block": true
+  },
+  "L": {
+   "tile": "roof_slate",
+   "block": true
+  },
+  "N": "dock_wood",
+  "W": {
+   "tile": "water_deep",
+   "block": true
+  },
+  "Y": {
+   "tile": "lamp",
+   "block": true
+  },
+  "c": "cobble",
+  "h": {
+   "tile": "hull",
+   "block": true
+  },
+  "k": "deck",
+  "p": {
+   "tile": "mast",
+   "block": true
+  },
+  "v": {
+   "tile": "barrel",
+   "block": true
+  },
+  "x": {
+   "tile": "crate",
+   "block": true
+  }
+ },
+ "ground": [
+  "LLLLLLLLLLLLWWWWWWWWWWWWWW",
+  "LLLLLLLLLLLLWWWWWWWWWWWWWW",
+  "FFFFFFFFFFFFWWWWWWWWWWWWWW",
+  "ccccccccccccNNNNWWWWWWWWWW",
+  "ccccccccccccNNNNWWhhhhhhhW",
+  "ccccccccccccNNNNWWhkkkkkhW",
+  "ccccccccccccNNNNWWhkkkkkhW",
+  "ccccccccccccNNNN>>hkkkkkhW",
+  "ccccccccccccNNNN>>hkkkkkhW",
+  "ccccccccccccNNNNWWhkkkkkhW",
+  "ccccccccccccNNNNWWhkkkkkhW",
+  "ccccccccccccNNNNWWhkkkkkhW",
+  "ccccccccccccNNNNWWhhhhhhhW",
+  "ccccccccccccNNNNWWWWWWWWWW",
+  "ccccccccccccNNNNWWWWWWWWWW",
+  "ccccccccccccNNNNWWWWWWWWWW"
+ ],
+ "objects": [
+  "                          ",
+  "                          ",
+  "                          ",
+  "                          ",
+  "              x           ",
+  "                          ",
+  "   Y     Y                ",
+  "                          ",
+  "                     p    ",
+  "                          ",
+  "                          ",
+  "      xx                  ",
+  "      v                   ",
+  "             v            ",
+  "                          ",
+  "                          "
+ ],
+ "props": [],
+ "events": [
+  {
+   "id": "to_erisia_town_0_7",
+   "x": 0,
+   "y": 7,
+   "transfer": {
+    "map": "erisia_town",
+    "x": 32,
+    "y": 15,
+    "dir": "left"
+   }
+  },
+  {
+   "id": "to_erisia_town_0_8",
+   "x": 0,
+   "y": 8,
+   "transfer": {
+    "map": "erisia_town",
+    "x": 32,
+    "y": 16,
+    "dir": "left"
+   }
+  },
+  {
+   "id": "to_argo_deck_17_7",
+   "x": 17,
+   "y": 7,
+   "transfer": {
+    "map": "argo_deck",
+    "x": 3,
+    "y": 6,
+    "dir": "right"
+   }
+  },
+  {
+   "id": "to_argo_deck_17_8",
+   "x": 17,
+   "y": 8,
+   "transfer": {
+    "map": "argo_deck",
+    "x": 3,
+    "y": 6,
+    "dir": "right"
+   }
+  }
+ ]
+}

@@ -1,0 +1,149 @@
+{
+ "name": "클로토의 집 · 1층",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  ".": "rb:12,13",
+  "A": {
+   "tile": "rb:1,13",
+   "block": true
+  },
+  "a": {
+   "tile": "rb:1,14",
+   "block": true
+  },
+  "q": "stairs"
+ },
+ "ground": [
+  "#AAAAAAAAAAAA#AAA#",
+  "#aaaaaaaaaaaa#aaa#",
+  "#............#...#",
+  "#............#...#",
+  "#................#",
+  "#............#...#",
+  "#............#...#",
+  "#............#...#",
+  "#............#####",
+  "#q...........#####",
+  "#............#####",
+  "######.###########"
+ ],
+ "objects": [
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  ",
+  "                  "
+ ],
+ "props": [
+  {
+   "prop": "counter",
+   "x": 2,
+   "y": 2
+  },
+  {
+   "prop": "rack",
+   "x": 6,
+   "y": 2
+  },
+  {
+   "prop": "window",
+   "x": 8,
+   "y": 1
+  },
+  {
+   "prop": "table_light",
+   "x": 4,
+   "y": 5
+  },
+  {
+   "prop": "chair_front",
+   "x": 4,
+   "y": 4
+  },
+  {
+   "prop": "chair_front2",
+   "x": 5,
+   "y": 4
+  },
+  {
+   "prop": "chair_back",
+   "x": 4,
+   "y": 7
+  },
+  {
+   "prop": "chair_back",
+   "x": 5,
+   "y": 7
+  },
+  {
+   "prop": "sofa",
+   "x": 9,
+   "y": 3
+  },
+  {
+   "prop": "rug_red",
+   "x": 8,
+   "y": 5
+  },
+  {
+   "prop": "table_dark",
+   "x": 9,
+   "y": 8
+  },
+  {
+   "prop": "stool",
+   "x": 11,
+   "y": 9
+  },
+  {
+   "prop": "bed_single",
+   "x": 16,
+   "y": 2
+  },
+  {
+   "prop": "rack",
+   "x": 14,
+   "y": 2
+  },
+  {
+   "prop": "window_small",
+   "x": 14,
+   "y": 1
+  }
+ ],
+ "events": [
+  {
+   "id": "to_erisia_home_2f_1_9",
+   "x": 1,
+   "y": 9,
+   "transfer": {
+    "map": "erisia_home_2f",
+    "x": 8,
+    "y": 7,
+    "dir": "left"
+   }
+  },
+  {
+   "id": "to_erisia_town_6_11",
+   "x": 6,
+   "y": 11,
+   "transfer": {
+    "map": "erisia_town",
+    "x": 4,
+    "y": 4,
+    "dir": "down"
+   }
+  }
+ ]
+}

@@ -1,0 +1,79 @@
+{
+ "name": "아르고 정기선 · 선실",
+ "indoor": true,
+ "legend": {
+  "#": {
+   "tile": "void",
+   "block": true
+  },
+  ";": "rb:15,11",
+  "D": {
+   "tile": "rb:1,17",
+   "block": true
+  },
+  "d": {
+   "tile": "rb:1,18",
+   "block": true
+  }
+ },
+ "ground": [
+  "#DDDDDDDDD#",
+  "#ddddddddd#",
+  "#;;;;;;;;;#",
+  "#;;;;;;;;;#",
+  "#;;;;;;;;;#",
+  "#;;;;;;;;;#",
+  "#;;;;;;;;;#",
+  "#####;#####"
+ ],
+ "objects": [
+  "           ",
+  "           ",
+  "           ",
+  "           ",
+  "           ",
+  "           ",
+  "           ",
+  "           "
+ ],
+ "props": [
+  {
+   "prop": "bed_single",
+   "x": 2,
+   "y": 2
+  },
+  {
+   "prop": "bed_single",
+   "x": 4,
+   "y": 2
+  },
+  {
+   "prop": "bed_single",
+   "x": 8,
+   "y": 2
+  },
+  {
+   "prop": "window_small",
+   "x": 5,
+   "y": 1
+  },
+  {
+   "prop": "stool",
+   "x": 6,
+   "y": 4
+  }
+ ],
+ "events": [
+  {
+   "id": "to_argo_deck_5_7",
+   "x": 5,
+   "y": 7,
+   "transfer": {
+    "map": "argo_deck",
+    "x": 4,
+    "y": 5,
+    "dir": "down"
+   }
+  }
+ ]
+}

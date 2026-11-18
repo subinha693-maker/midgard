@@ -63,3 +63,50 @@ describe('저장', () => {
     expect(migrate({ version: 999, state: {} })).toBeNull();
   });
 });
+
+describe('맵 연결 (P4)', () => {
+  const all = new Map(
+    readdirSync('data/maps')
+      .filter((n) => n.endsWith('.json'))
+      .map((f) => [f.replace('.json', ''), parseMap(JSON.parse(readFileSync(`data/maps/${f}`, 'utf8')), f)]),
+  );
+  it('모든 이동 목적지가 지나갈 수 있는 칸이고, 바로 다른 이동 칸이 아님', () => {
+    for (const m of all.values())
+      for (const ev of m.events) {
+        if (!ev.transfer) continue;
+        const t = ev.transfer;
+        const dst = all.get(t.map);
+        expect(dst, `${m.id} → ${t.map}`).toBeTruthy();
+        expect(dst!.block[t.y]?.[t.x], `${m.id} → ${t.map} (${t.x},${t.y}) 막힘`).toBe(false);
+        expect(dst!.events.some((e) => e.transfer && e.x === t.x && e.y === t.y), `${t.map} (${t.x},${t.y}) 도착 칸이 이동 칸`).toBe(false);
+      }
+  });
+  it('집 2층에서 걸어서 미르 레브리까지 이어짐 (배 구간 제외)', () => {
+    // 맵 안에서 이동 칸끼리 걸어서 닿는지 + 맵 사이 연결
+    const reach = (id: string, sx: number, sy: number) => {
+      const m = all.get(id)!;
+      const seen = new Set<string>([`${sx},${sy}`]);
+      const q = [[sx, sy]];
+      while (q.length) {
+        const [x, y] = q.shift()!;
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h || m.block[ny][nx] || seen.has(`${nx},${ny}`)) continue;
+          seen.add(`${nx},${ny}`);
+          q.push([nx, ny]);
+        }
+      }
+      return m.events.filter((e) => e.transfer && seen.has(`${e.x},${e.y}`)).map((e) => e.transfer!);
+    };
+    const visited = new Set<string>();
+    const stack: [string, number, number][] = [['erisia_home_2f', 3, 4], ['mir_port', 12, 9]]; // 미르는 배에서 내리는 곳부터
+    while (stack.length) {
+      const [id, x, y] = stack.pop()!;
+      if (visited.has(id)) continue;
+      visited.add(id);
+      for (const t of reach(id, x, y)) stack.push([t.map, t.x, t.y]);
+    }
+    for (const id of ['erisia_home_1f', 'erisia_town', 'erisia_bakery', 'erisia_cityhall', 'erisia_clinic', 'erisia_testground', 'noggria_port', 'argo_deck', 'argo_cabin', 'mir_market', 'mir_hammer', 'mir_lebri'])
+      expect(visited.has(id), id).toBe(true);
+  });
+});
