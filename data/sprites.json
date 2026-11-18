@@ -1,0 +1,37 @@
+{
+  "_설명": "걸음 도트 시트 연결표. 원본(assets/user/)은 수정하지 않고, 실행 중에 칸을 잘라 배경을 지우고 화면 크기로 줄여 쓴다. grid=[열,행], rows=방향별 행 번호, walk=걷기 때 돌릴 열 순서, stand=서 있을 때 열. bg: auto면 칸 왼쪽 위 모서리 색을 배경으로 본다. tolerance: 배경으로 볼 색 차이(RGB 합).",
+  "displayHeight": 60,
+  "sheets": {
+    "klotho_coat": {
+      "file": "assets/user/1000023036.png",
+      "grid": [3, 4],
+      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
+      "walk": [0, 1, 2, 1],
+      "stand": 1,
+      "bg": "auto",
+      "tolerance": 90
+    },
+    "klotho_home": {
+      "same": "klotho_coat",
+      "_TODO": "TODO(미정): M01~M02 집 옷 도트 없음 → 코트 시트로 임시 대체"
+    },
+    "anan": {
+      "file": "assets/user/1000023037.png",
+      "grid": [3, 4],
+      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
+      "walk": [0, 1, 2, 1],
+      "stand": 1,
+      "bg": "auto",
+      "tolerance": 45
+    },
+    "hans": {
+      "file": "assets/user/1000023035.png",
+      "grid": [3, 4],
+      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
+      "walk": [0, 1, 2, 1],
+      "stand": 1,
+      "bg": "auto",
+      "tolerance": 45
+    }
+  }
+}

@@ -1,45 +1,41 @@
 import Phaser from 'phaser';
 import { DISPLAY } from '../config/display';
+import { NEW_GAME } from '../config/game';
 import { DEBUG } from '../core/debug';
-import { portraitSets, resolvePortrait } from '../core/portraits';
+import { hasAnySave } from '../core/save';
+import { game, newState } from '../core/state';
+import { button, COLORS, SERIF } from '../ui/widgets';
 
-// 타이틀 화면 (P0: 빈 화면 + 버튼 자리)
+// 타이틀 화면
 export class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
 
   create(): void {
     const { width: W, height: H } = DISPLAY;
-    this.add.text(W / 2, H * 0.36, '미드가르드', {
-      fontFamily: 'serif', fontSize: '64px', color: '#e8e2d0',
-    }).setOrigin(0.5);
-    this.add.text(W / 2, H * 0.36 + 56, '챕터 1 · 프롤로그', {
-      fontFamily: 'serif', fontSize: '22px', color: '#8f8a7c',
-    }).setOrigin(0.5);
+    this.cameras.main.fadeIn(400);
+    this.add.text(W / 2, H * 0.32, '미드가르드', { fontFamily: SERIF, fontSize: '68px', color: '#e8e2d0' }).setOrigin(0.5);
+    this.add.text(W / 2, H * 0.32 + 62, '챕터 1 · 프롤로그', { fontFamily: SERIF, fontSize: '22px', color: COLORS.dim }).setOrigin(0.5);
 
-    const btn = this.add.text(W / 2, H * 0.7, '새 게임', {
-      fontFamily: 'sans-serif', fontSize: '28px', color: '#ffffff',
-      backgroundColor: '#2a2a2a', padding: { x: 28, y: 12 },
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    btn.on('pointerdown', () => {
-      // TODO(P2): 콜드 오픈 시작
-      btn.setText('준비 중 (P2 이후)');
-    });
-
-    // 개발 모드: 초상화 연결표가 제대로 잘리는지 확인용 줄
-    if (DEBUG) this.showPortraitCheck();
+    const bw = 300;
+    this.add.existing(button(this, (W - bw) / 2, H * 0.58, bw, 66, '새 게임', () => this.newGame(), 26));
+    const cont = button(this, (W - bw) / 2, H * 0.58 + 84, bw, 66, '이어하기', () => this.openLoad(), 26);
+    cont.setEnabled(hasAnySave());
+    this.add.existing(cont);
+    if (DEBUG) this.add.text(10, H - 30, '개발 모드 (?debug=1)', { fontSize: '16px', color: '#666' });
   }
 
-  private showPortraitCheck(): void {
-    let x = 8;
-    for (const [actor, set] of Object.entries(portraitSets)) {
-      for (const expr of Object.keys(set.expressions)) {
-        const p = resolvePortrait(actor, expr);
-        if (!p) continue;
-        const img = this.add.image(x, DISPLAY.height - 4, p.texture, p.frame).setOrigin(0, 1);
-        img.setScale(96 / img.height);
-        x += img.displayWidth + 2;
-      }
-      x += 10;
-    }
+  private newGame(): void {
+    game.state = newState();
+    const s = game.state;
+    s.map = { id: NEW_GAME.map, x: NEW_GAME.x, y: NEW_GAME.y, dir: NEW_GAME.dir };
+    s.playerSprite = NEW_GAME.sprite;
+    s.money = NEW_GAME.money;
+    this.cameras.main.fadeOut(300);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Field', { label: NEW_GAME.label }));
+  }
+
+  private openLoad(): void {
+    this.scene.launch('Menu', { fromTitle: true, page: 'load' });
+    this.scene.bringToTop('Menu');
   }
 }

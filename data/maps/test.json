@@ -1,0 +1,166 @@
+{
+ "name": "테스트 마을",
+ "indoor": false,
+ "legend": {
+  "P": {
+   "tile": "plaster_wall",
+   "block": true
+  },
+  "w": "wood_floor",
+  ",": "grass",
+  "=": "stone_road",
+  "~": {
+   "tile": "water",
+   "block": true
+  },
+  "p": "poster",
+  "B": {
+   "tile": "bed",
+   "block": true
+  },
+  "S": {
+   "tile": "shelf",
+   "block": true
+  },
+  "T": {
+   "tile": "table",
+   "block": true
+  },
+  "t": {
+   "tile": "tree",
+   "block": true
+  },
+  "L": {
+   "tile": "lamp",
+   "block": true
+  },
+  "c": {
+   "tile": "crate",
+   "block": true
+  },
+  "s": {
+   "tile": "sign",
+   "block": true
+  }
+ },
+ "ground": [
+  "PPPPPPPPPPP,,,,,,,,,,,",
+  "PwwwwwwwwwP,,,,,,,,,,,",
+  "PwwwwwwwwwP,,,,,,,,,,,",
+  "Pwwwwwwwwww====,,,,,,,",
+  "PwwwwwwwwwP,,,=,,,,,,,",
+  "PwwwwwwwwwP,,,=,,,,,,,",
+  "PwwwwwwwwwP,,,=,,~~~~,",
+  "PPPPPwPPPPP,,,=,,~~~~,",
+  ",,,,,=,,,,,,,,=,,~~~~,",
+  ",,,,,===============,,",
+  ",,,,,,,,,,,,,,,,,,,===",
+  ",,,,,,,,,,,,,,,,,,,,,,",
+  ",,,,,,,,,,,,,,,,,,,,,,",
+  ",,,,,,,,,,,,,,,,,,,,,,"
+ ],
+ "objects": [
+  "  p                   ",
+  "        B   t      t  ",
+  " S                    ",
+  "                      ",
+  "    TT       L        ",
+  "                      ",
+  "                      ",
+  "                      ",
+  "  t        c          ",
+  "                      ",
+  "                    s ",
+  "   t                  ",
+  "           t     t    ",
+  "                      "
+ ],
+ "events": [
+  {
+   "id": "anan",
+   "x": 3,
+   "y": 2,
+   "sprite": "anan",
+   "dir": "down",
+   "trigger": "talk",
+   "pages": [
+    {
+     "if": "테스트_아난_대화끝",
+     "label": "TEST_아난2"
+    },
+    {
+     "label": "TEST_아난"
+    }
+   ]
+  },
+  {
+   "id": "hans",
+   "x": 15,
+   "y": 11,
+   "sprite": "hans",
+   "dir": "left",
+   "trigger": "talk",
+   "label": "TEST_한스",
+   "route": [
+    "left*3",
+    "wait 1",
+    "right*3",
+    "wait 1.5"
+   ]
+  },
+  {
+   "id": "poster",
+   "x": 2,
+   "y": 0,
+   "trigger": "talk",
+   "label": "TEST_벽보"
+  },
+  {
+   "id": "bed",
+   "x": 8,
+   "y": 1,
+   "trigger": "talk",
+   "label": "TEST_침대"
+  },
+  {
+   "id": "memo",
+   "x": 4,
+   "y": 4,
+   "trigger": "talk",
+   "label": "TEST_메모"
+  },
+  {
+   "id": "crate",
+   "x": 11,
+   "y": 8,
+   "trigger": "talk",
+   "label": "TEST_상자"
+  },
+  {
+   "id": "sign",
+   "x": 20,
+   "y": 10,
+   "trigger": "talk",
+   "label": "TEST_표지판"
+  },
+  {
+   "id": "road",
+   "x": 14,
+   "y": 5,
+   "trigger": "touch",
+   "show": "!테스트_밟기끝",
+   "label": "TEST_밟기"
+  },
+  {
+   "id": "to_mir",
+   "x": 21,
+   "y": 10,
+   "transfer": {
+    "map": "test2",
+    "x": 1,
+    "y": 5,
+    "dir": "right"
+   }
+  }
+ ]
+}

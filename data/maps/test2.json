@@ -1,0 +1,83 @@
+{
+ "name": "테스트 거리 (미르풍)",
+ "indoor": false,
+ "legend": {
+  "C": {
+   "tile": "concrete_wall",
+   "block": true
+  },
+  "o": "concrete",
+  "i": "iron_plate",
+  "=": "dock_wood",
+  "b": {
+   "tile": "bars",
+   "block": true
+  },
+  "c": {
+   "tile": "crate",
+   "block": true
+  },
+  "L": {
+   "tile": "lamp",
+   "block": true
+  }
+ },
+ "ground": [
+  "CCCCCCCCCCCCCCCC",
+  "CooooooooooooooC",
+  "CooiiooooooiiooC",
+  "CooooooooooooooC",
+  "CooooooooooooooC",
+  "oooooooooooooooC",
+  "Coooooo==ooooooC",
+  "Coooooo==ooooooC",
+  "CooooooooooooooC",
+  "CCCCCCCbbCCCCCCC"
+ ],
+ "objects": [
+  "                ",
+  "  c          c  ",
+  "                ",
+  "                ",
+  "       L        ",
+  "                ",
+  "                ",
+  "                ",
+  "                ",
+  "                "
+ ],
+ "events": [
+  {
+   "id": "arrive",
+   "x": 0,
+   "y": 0,
+   "trigger": "autorun",
+   "show": "!테스트_미르도착",
+   "label": "TEST_미르도착"
+  },
+  {
+   "id": "back",
+   "x": 0,
+   "y": 5,
+   "transfer": {
+    "map": "test",
+    "x": 20,
+    "y": 10,
+    "dir": "left"
+   }
+  },
+  {
+   "id": "anan2",
+   "x": 10,
+   "y": 6,
+   "sprite": "klotho_coat",
+   "dir": "left",
+   "trigger": "talk",
+   "label": "TEST_거울",
+   "route": [
+    "random",
+    "wait 1.2"
+   ]
+  }
+ ]
+}
