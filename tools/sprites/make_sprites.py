@@ -36,7 +36,10 @@ FRAME = 48
 
 LIGHT = {'i': 'h', 'j': 'c', 'l': 'n', 'u': 'v', 'y': 't'}
 PRIORITY = {'h': 9, 'g': 9, 'c': 8, 'n': 7, 'v': 7, 'f': 6, 't': 5, 'b': 4, 'p': 4, 's': 1, 'e': 0, 'r': 0}
-NO_OUTLINE = {'e', 'r', 'g', 'w'}
+NO_OUTLINE = {'e', 'r', 'g', 'w', 'z'}
+SHADOW_RGBA = (0, 0, 0, 80)  # 발밑 그림자
+OUTLINE_DARKEN = 0.55
+LIGHT_T, SHADE_T, DEEP_T = 0.22, 0.58, 0.86  # 입체 음영 경계값  # 외곽선을 검정 쪽으로 섞는 비율 (참고 시트처럼 거의 검은 선)
 WHITE = '#ffffff'  # 눈 하이라이트 (모든 인물 공용)
 
 
@@ -55,6 +58,8 @@ def code_to(mat_code: str):
         return 'g', 2
     if c == 'w':
         return 'w', 2
+    if c == 'z':
+        return 'z', 2
     if c.isupper():
         return c.lower(), 1
     return c, 2
@@ -95,21 +100,50 @@ def layer_cells(grid, ox, oy):
                     tone = 0
                     break
         out[(x, y)] = (m, tone)
-    # 2) 자동 음영 (광원 왼쪽 위). 직접 지정한 톤은 건드리지 않는다
-    def edge(p):
-        v = out.get(p)
-        return v is None or v[1] == 0
+    # 2) 입체 음영 (광원 왼쪽 위). 같은 재질 덩어리 안에서의 위치로 톤을 정한다.
+    #    u = 가로 위치(0=왼쪽 끝), v = 세로 위치(0=위 끝) → s = 0.55u + 0.45v
+    #    s 작음 → 밝은 톤, 큼 → 그림자 / 짙은 그림자(톤 4). 직접 지정한 톤은 그대로 둔다.
+    def span(x, y, m, dx, dy):
+        a = 0
+        while (x - dx * (a + 1), y - dy * (a + 1)) in cells and cells[(x - dx * (a + 1), y - dy * (a + 1))][0] == m:
+            a += 1
+        b = 0
+        while (x + dx * (b + 1), y + dy * (b + 1)) in cells and cells[(x + dx * (b + 1), y + dy * (b + 1))][0] == m:
+            b += 1
+        return a, b
     shaded = dict(out)
     for (x, y), (m, t) in out.items():
         if t != 2 or (x, y) in explicit or m in NO_OUTLINE:
             continue
+        l, r = span(x, y, m, 1, 0)
+        tp, bt = span(x, y, m, 0, 1)
+        u = l / max(1, l + r)
+        v = tp / max(1, tp + bt)
+        sc = 0.55 * u + 0.45 * v
         above = out.get((x, y - 1))
-        wide = m in ('h', 'c', 'n', 'v')  # 큰 덩어리는 그림자 2px
-        if edge((x + 1, y)) or edge((x, y + 1)) or (wide and (edge((x + 2, y)) or edge((x, y + 2)))):
-            shaded[(x, y)] = (m, 1)
-        elif m == 's' and above and above[0] in ('h', 'f'):
-            shaded[(x, y)] = (m, 1)  # 앞머리 아래 그림자
+        if m == 's' and above and above[0] in ('h', 'f'):
+            sc = max(sc, 0.7)  # 앞머리 아래 그림자
+        if sc < LIGHT_T:
+            tone = 3
+        elif sc < SHADE_T:
+            tone = 2
+        elif sc < DEEP_T:
+            tone = 1
+        else:
+            tone = 4
+        shaded[(x, y)] = (m, tone)
     return shaded
+
+def mix(a, b, k):
+    ra, ga, ba, _ = hex2rgb(a)
+    rb, gb, bb, _ = hex2rgb(b)
+    return '#%02x%02x%02x' % (int(ra + (rb - ra) * k), int(ga + (gb - ga) * k), int(ba + (bb - ba) * k))
+
+
+def darken(h, k):
+    r, g, b, _ = hex2rgb(h)
+    return '#%02x%02x%02x' % (int(r * (1 - k)), int(g * (1 - k)), int(b * (1 - k)))
+
 
 def hex2rgb(h):
     h = h.lstrip('#')
@@ -125,14 +159,27 @@ def render_frame(spec, direction, step, pal):
             canvas[k] = v
     img = Image.new('RGBA', (FRAME, FRAME), (0, 0, 0, 0))
     used = set()
+    shadow_ok = {k for k, v in canvas.items() if v[0] == 'z'}
     for (x, y), (m, t) in canvas.items():
         if not (0 <= x < FRAME and 0 <= y < FRAME):
             raise ValueError(f'{spec["name"]} {direction} 프레임 밖 픽셀 {(x, y)}')
+        if m == 'z':
+            if (x, y) not in shadow_ok:
+                continue
+            img.putpixel((x, y), SHADOW_RGBA)
+            continue
         if m == 'w':
             col = WHITE
         else:
             ramp = pal[m]
-            col = ramp[min(t, len(ramp) - 1)]
+            if t == 4:  # 짙은 그림자: 그림자와 외곽선의 중간
+                col = mix(ramp[1], ramp[0], 0.45)
+            elif t == 3 and len(ramp) < 4:
+                col = ramp[2]  # 밝은 톤이 없는 재질
+            else:
+                col = ramp[min(t, len(ramp) - 1)]
+            if t == 0:
+                col = darken(col, OUTLINE_DARKEN)
         used.add(col)
         img.putpixel((x, y), hex2rgb(col))
     return img, used
