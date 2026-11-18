@@ -16,7 +16,6 @@ export class DialogueScene extends Phaser.Scene {
   private bodyText!: Phaser.GameObjects.Text;
   private arrow!: Phaser.GameObjects.Text;
   private portrait!: Phaser.GameObjects.Image;
-  private portraitFrame!: Phaser.GameObjects.Graphics;
   private input0!: Phaser.GameObjects.Zone;
   private choiceLayer!: Phaser.GameObjects.Container;
   private subtitleText!: Phaser.GameObjects.Text;
@@ -39,9 +38,6 @@ export class DialogueScene extends Phaser.Scene {
     const m = DIALOGUE.boxMargin;
     const by = H - bh - m;
 
-    // 표정 CG (대사창 뒤)
-    this.portraitFrame = this.add.graphics().setVisible(false);
-    this.portrait = this.add.image(0, 0, '__DEFAULT').setVisible(false).setOrigin(0.5, 1);
 
     this.box = this.add.container(0, 0).setVisible(false);
     this.box.add(panel(this, m, by, W - m * 2, bh));
@@ -52,6 +48,8 @@ export class DialogueScene extends Phaser.Scene {
     });
     this.arrow = text(this, W - m - 36, by + bh - 40, '▼', 20, COLORS.accent).setVisible(false);
     this.box.add([this.nameText, this.bodyText, this.arrow]);
+    // 표정 CG: 대사창 왼쪽, 대사창보다 위 층
+    this.portrait = this.add.image(0, 0, '__DEFAULT').setVisible(false).setOrigin(0.5, 1);
     this.tweens.add({ targets: this.arrow, y: '+=6', duration: 450, yoyo: true, repeat: -1 });
 
     // 대사 중 화면 어디를 눌러도 넘어가게 (아래 장면으로 터치가 가지 않음)
@@ -118,7 +116,6 @@ export class DialogueScene extends Phaser.Scene {
   close(): void {
     this.box.setVisible(false);
     this.portrait.setVisible(false);
-    this.portraitFrame.setVisible(false);
     this.input0.disableInteractive().setVisible(false);
   }
 
@@ -141,27 +138,25 @@ export class DialogueScene extends Phaser.Scene {
     r();
   }
 
-  private showPortrait(speaker?: string, expr?: string, side?: 'left' | 'right'): void {
+  /** 초상화는 항상 대사창 왼쪽. 상반신이 대사창 위로 올라오고, 대사는 그 오른쪽부터 */
+  private showPortrait(speaker?: string, expr?: string, _side?: 'left' | 'right'): void {
+    const m = DIALOGUE.boxMargin;
+    const by = H - DIALOGUE.boxHeight - m;
     const p = speaker && portraitSets[speaker] ? resolvePortrait(speaker, expr) : null;
-    if (!p) {
-      this.portrait.setVisible(false);
-      this.portraitFrame.setVisible(false);
-      return;
-    }
-    const set = portraitSets[speaker!];
-    const s = side ?? set.side;
-    this.portrait.setTexture(p.texture, p.frame);
-    const h = DIALOGUE.portraitHeight * (set.scale ?? 1);
-    this.portrait.setScale(h / this.portrait.height);
-    const w = this.portrait.displayWidth;
-    const by = H - DIALOGUE.boxHeight - DIALOGUE.boxMargin;
-    const x = s === 'left' ? 40 + w / 2 : W - 40 - w / 2;
-    this.portrait.setPosition(x, by + 4).setVisible(true);
-    // 원본 CG에 배경이 있어 액자처럼 테두리를 두른다
-    this.portraitFrame.clear();
-    this.portraitFrame.lineStyle(3, COLORS.border, 0.9);
-    this.portraitFrame.strokeRect(x - w / 2 - 2, by + 4 - h - 2, w + 4, h + 4);
-    this.portraitFrame.setVisible(true);
+    let textX = m + 28;
+    if (p) {
+      const set = portraitSets[speaker!];
+      this.portrait.setTexture(p.texture);
+      const h = DIALOGUE.portraitHeight * (set.scale ?? 1);
+      this.portrait.setScale(h / this.portrait.height);
+      const w = this.portrait.displayWidth;
+      this.portrait.setPosition(m + 6 + w / 2, H - m).setVisible(true);
+      textX = m + 6 + w + 20;
+    } else this.portrait.setVisible(false);
+    this.nameText.setX(textX);
+    this.bodyText.setX(textX);
+    this.bodyText.setWordWrapWidth(W - m - 40 - textX, true);
+    void by;
   }
 
   /** 선택지 2~4개. 고른 번호를 돌려준다 */
@@ -186,8 +181,8 @@ export class DialogueScene extends Phaser.Scene {
       // 표정 CG와 겹치지 않게 반대쪽으로 비켜 놓는다
       let cx = W / 2;
       if (this.portrait.visible) {
-        const pw = this.portrait.displayWidth + 60;
-        cx = this.portrait.x > W / 2 ? (W - pw) / 2 : pw + (W - pw) / 2;
+        const pw = this.portrait.displayWidth + 40;
+        cx = pw + (W - pw) / 2;
       }
       options.forEach((o, i) => {
         const b = button(this, cx - bw / 2, top + i * (bh + gap), bw, bh, o, () => done(i), DIALOGUE.choiceFontSize);

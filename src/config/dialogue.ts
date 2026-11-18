@@ -7,7 +7,7 @@ export const DIALOGUE = {
   boxMargin: 16,
   fontSize: 26,
   nameFontSize: 22,
-  portraitHeight: 380, // 대사창 위로 올라오는 표정 CG 높이
+  portraitHeight: 330, // 대사창 왼쪽에 세우는 표정 CG 높이 (아래는 화면 아래 여백에 맞춤)
   choiceFontSize: 26,
   choiceMinHeight: 64, // 손가락으로 누르기 쉬운 최소 높이
   subtitleSeconds: 2.5,

@@ -1,11 +1,10 @@
 {
-  "_설명": "인물 → 표정 키 → 원본 파일과 자르기 영역(rect, 원본 픽셀 기준). 원본은 수정하지 않고 실행 중에 잘라 쓴다. side: 대사창 초상화 위치, scale: 대사창 배율, faceCrop: 전투 상태바 얼굴 영역(기본 표정 rect 기준 상대 좌표).",
+  "_설명": "인물 → 표정 키 → 원본 파일과 자르기 영역(rect, 원본 픽셀 기준). 원본은 수정하지 않고 실행 중에 잘라 쓴다. 초상화는 대사창 왼쪽에 고정. removeBg: 실행 중 배경 지우기(inset=가장자리 테두리 잘라냄 px, tolerance=이웃 색 차이 허용치, erase=그림 안 이름표를 지울 영역[x,y,w,h], 자른 영역 기준). faceCrop: 전투 상태바 얼굴 영역(기본 표정 rect 기준).",
   "characters": {
     "클로토": {
       "name": "클로토",
       "default": "기본",
-      "side": "left",
-      "scale": 0.9,
+      "scale": 1,
       "expressions": {
         "기본": {
           "file": "assets/user/1000023027.png",
@@ -76,13 +75,24 @@
         "y": 80,
         "w": 240,
         "h": 240
+      },
+      "removeBg": {
+        "inset": 5,
+        "tolerance": 18,
+        "erase": [
+          [
+            0,
+            0,
+            135,
+            42
+          ]
+        ]
       }
     },
     "아난": {
       "name": "아난",
       "default": "기본",
-      "side": "right",
-      "scale": 0.9,
+      "scale": 1,
       "expressions": {
         "기본": {
           "file": "assets/user/1000023028.png",
@@ -153,13 +163,17 @@
         "y": 80,
         "w": 230,
         "h": 230
+      },
+      "removeBg": {
+        "inset": 5,
+        "tolerance": 18,
+        "erase": []
       }
     },
     "한스": {
       "name": "한스",
       "default": "기본",
-      "side": "right",
-      "scale": 0.8,
+      "scale": 1,
       "expressions": {
         "기본": {
           "file": "assets/user/1000023029.png",
@@ -231,7 +245,19 @@
         "w": 240,
         "h": 240
       },
-      "_메모": "임시 CG: 한스로 요청했으나 기획 외형(반백·지느러미 귀·아가미)과 다르게 나옴. 교체 예정"
+      "_메모": "임시 CG: 한스로 요청했으나 기획 외형(반백·지느러미 귀·아가미)과 다르게 나옴. 교체 예정",
+      "removeBg": {
+        "inset": 5,
+        "tolerance": 18,
+        "erase": [
+          [
+            0,
+            0,
+            125,
+            46
+          ]
+        ]
+      }
     }
   }
 }
