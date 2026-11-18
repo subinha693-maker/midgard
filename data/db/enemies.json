@@ -1,17 +1,113 @@
 {
   "_설명": "적 [제안]. 이름 원형·야형은 대본(파트 A)에 나온 이름. shape=임시 실루엣 모양(cat/dog/blob). image=적 그림 파일(assets/user/…, 투명 배경 권장), imageHeight=전투 화면 높이. image 가 없으면 shape 실루엣. scriptedLoss=true 면 져도 게임 오버 대신 지정 원고 라벨로. money/exp=이겼을 때 보상.",
   "enemies": {
-    "원형": { "name": "원형", "shape": "cat", "color": "#3a2f3f", "hp": 18, "근력": 5, "민첩": 6, "방어": 1, "money": 0, "exp": 6,
-      "_메모": "작은 고양이만 한, 엉성하게 생긴 짐승. 다리 개수가 맞지 않는다" },
-    "야형": { "name": "야형", "shape": "dog", "color": "#2f3a2c", "hp": 30, "근력": 7, "민첩": 9, "방어": 2, "money": 0, "exp": 12,
-      "_메모": "강아지만 한 원시적 형태. 이빨이 몸 바깥으로 자라 있다" },
-    "흉형_구조": { "name": "흉형", "shape": "blob", "color": "#1c1c24", "hp": 999, "근력": 30, "민첩": 30, "방어": 20, "money": 0, "exp": 0,
-      "_메모": "챕터 1 후반 못 이기는 전투 구조 확인용 (이번 범위에선 개발 모드에서만)" }
+    "원형": {
+      "name": "원형",
+      "shape": "cat",
+      "color": "#3a2f3f",
+      "hp": 18,
+      "근력": 5,
+      "민첩": 6,
+      "방어": 1,
+      "money": 0,
+      "exp": 6,
+      "_메모": "작은 고양이만 한, 엉성하게 생긴 짐승. 다리 개수가 맞지 않는다",
+      "image": "assets/user/enemies/monster_1.png",
+      "imageHeight": 170
+    },
+    "야형": {
+      "name": "야형",
+      "shape": "dog",
+      "color": "#2f3a2c",
+      "hp": 30,
+      "근력": 7,
+      "민첩": 9,
+      "방어": 2,
+      "money": 0,
+      "exp": 12,
+      "_메모": "강아지만 한 원시적 형태. 이빨이 몸 바깥으로 자라 있다",
+      "image": "assets/user/enemies/monster_4.png",
+      "imageHeight": 230
+    },
+    "흉형_구조": {
+      "name": "흉형",
+      "shape": "blob",
+      "color": "#1c1c24",
+      "hp": 999,
+      "근력": 30,
+      "민첩": 30,
+      "방어": 20,
+      "money": 0,
+      "exp": 0,
+      "_메모": "챕터 1 후반 못 이기는 전투 구조 확인용 (이번 범위에선 개발 모드에서만)",
+      "image": "assets/user/enemies/monster_3.png",
+      "imageHeight": 290
+    },
+    "적_2": {
+      "name": "TODO(임시이름) 적2",
+      "shape": "blob",
+      "color": "#3a3a3a",
+      "image": "assets/user/enemies/monster_2.png",
+      "imageHeight": 250,
+      "hp": 40,
+      "근력": 8,
+      "민첩": 12,
+      "방어": 2,
+      "money": 0,
+      "exp": 15,
+      "_메모": "사용자 몬스터 그림 2 — 챕터 1 이후용, 이름·능력치 미정"
+    },
+    "적_5": {
+      "name": "TODO(임시이름) 적5",
+      "shape": "blob",
+      "color": "#3a3a3a",
+      "image": "assets/user/enemies/monster_5.png",
+      "imageHeight": 280,
+      "hp": 60,
+      "근력": 10,
+      "민첩": 8,
+      "방어": 4,
+      "money": 0,
+      "exp": 25,
+      "_메모": "사용자 몬스터 그림 5 — 챕터 1 이후용, 이름·능력치 미정"
+    }
   },
   "groups": {
-    "원형1": { "enemies": ["원형"], "retry": true },
-    "야형1": { "enemies": ["야형"], "retry": true },
-    "원형2": { "enemies": ["원형", "원형"] },
-    "못이김_테스트": { "enemies": ["흉형_구조"], "scriptedLoss": "TEST_패배후" }
+    "원형1": {
+      "enemies": [
+        "원형"
+      ],
+      "retry": true
+    },
+    "야형1": {
+      "enemies": [
+        "야형"
+      ],
+      "retry": true
+    },
+    "원형2": {
+      "enemies": [
+        "원형",
+        "원형"
+      ]
+    },
+    "못이김_테스트": {
+      "enemies": [
+        "흉형_구조"
+      ],
+      "scriptedLoss": "TEST_패배후"
+    },
+    "야형1_원형1": {
+      "enemies": [
+        "원형",
+        "야형"
+      ]
+    },
+    "그림확인_2_5": {
+      "enemies": [
+        "적_2",
+        "적_5"
+      ]
+    }
   }
 }
