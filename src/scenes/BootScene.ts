@@ -3,6 +3,9 @@ import { preloadPortraits, registerPortraitFrames } from '../core/portraits';
 import { buildSprites, preloadSprites } from '../core/sprites';
 import { buildTiles } from '../core/tiles';
 import { preloadIllustrations } from './CGScene';
+import { ENEMIES } from '../core/db';
+import { assetUrl } from '../core/assets';
+import { devWarn } from '../core/debug';
 
 // 시작 시 공용 에셋 적재·가공
 export class BootScene extends Phaser.Scene {
@@ -14,6 +17,13 @@ export class BootScene extends Phaser.Scene {
     preloadPortraits(this);
     preloadSprites(this);
     preloadIllustrations(this);
+    // 적 그림 (enemies.json 의 image)
+    for (const [k, e] of Object.entries(ENEMIES)) {
+      if (!e.image) continue;
+      const url = assetUrl(e.image);
+      if (url) this.load.image('enemyimg:' + k, url);
+      else devWarn('적 그림 파일 없음:', e.image);
+    }
   }
 
   create(): void {

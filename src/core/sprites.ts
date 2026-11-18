@@ -18,6 +18,7 @@ interface SheetDef {
   stand?: number;
   bg?: string;
   tolerance?: number;
+  frames?: Partial<Record<Dir, [number, number, number][]>>; // 방향별 [행, 열, 뒤집기]
 }
 const DATA = spriteData as unknown as { displayHeight: number; sheets: Record<string, SheetDef> };
 
@@ -115,13 +116,25 @@ function buildSheet(scene: Phaser.Scene, key: string, def: SheetDef): SheetInfo 
   octx.imageSmoothingQuality = 'high';
   const rowOf = def.rows ?? { down: 0, left: 1, right: 2, up: 3 };
   DIRS.forEach((d, di) => {
-    const r = rowOf[d];
-    for (let c = 0; c < cols; c++) {
-      const small = downscale(cells[r][c], Math.round(cw * scale), Math.round(ch * scale));
+    // 기본: 그 방향 행의 칸을 순서대로. frames 가 있으면 [행, 열, 뒤집기] 대로
+    const src = def.frames?.[d] ?? Array.from({ length: cols }, (_, c) => [rowOf[d], c, 0] as [number, number, number]);
+    src.forEach(([r, c0, flipped], c) => {
+      let cell = cells[r][c0];
+      if (flipped) {
+        const f = document.createElement('canvas');
+        f.width = cw;
+        f.height = ch;
+        const fx = f.getContext('2d')!;
+        fx.translate(cw, 0);
+        fx.scale(-1, 1);
+        fx.drawImage(cell, 0, 0);
+        cell = f;
+      }
+      const small = downscale(cell, Math.round(cw * scale), Math.round(ch * scale));
       // 발끝(inkBottom)이 프레임 아래에서 2px 위에 오도록
       const dy = di * fh + (fh - 2) - Math.round(inkBottom[r] * scale);
       octx.drawImage(small, c * fw, dy);
-    }
+    });
   });
   const tkey = 'walk:' + key;
   const tex = scene.textures.addCanvas(tkey, out)!;

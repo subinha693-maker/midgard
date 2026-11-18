@@ -1,5 +1,5 @@
 {
-  "_설명": "적 [제안]. 이름 원형·야형은 대본(파트 A)에 나온 이름. shape=임시 실루엣 모양(cat/dog/blob). scriptedLoss=true 면 져도 게임 오버 대신 지정 원고 라벨로. money/exp=이겼을 때 보상.",
+  "_설명": "적 [제안]. 이름 원형·야형은 대본(파트 A)에 나온 이름. shape=임시 실루엣 모양(cat/dog/blob). image=적 그림 파일(assets/user/…, 투명 배경 권장), imageHeight=전투 화면 높이. image 가 없으면 shape 실루엣. scriptedLoss=true 면 져도 게임 오버 대신 지정 원고 라벨로. money/exp=이겼을 때 보상.",
   "enemies": {
     "원형": { "name": "원형", "shape": "cat", "color": "#3a2f3f", "hp": 18, "근력": 5, "민첩": 6, "방어": 1, "money": 0, "exp": 6,
       "_메모": "작은 고양이만 한, 엉성하게 생긴 짐승. 다리 개수가 맞지 않는다" },

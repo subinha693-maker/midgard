@@ -92,12 +92,18 @@ export class BattleScene extends Phaser.Scene {
       }
       light.fillStyle(0xfff4d8, 0.05);
       light.fillTriangle(x, -40, x - 150, y + 60, x + 150, y + 60);
-      const img = this.add.image(x, y + 50, this.silhouette(e)).setOrigin(0.5, 1);
+      const key = Object.keys(ENEMIES).find((k) => ENEMIES[k] === e) ?? '';
+      const hasImg = this.textures.exists('enemyimg:' + key);
+      const img = this.add.image(x, y + 50, hasImg ? 'enemyimg:' + key : this.silhouette(e)).setOrigin(0.5, 1);
+      if (hasImg) {
+        img.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        img.setScale((e.imageHeight ?? 220) / img.height);
+      }
       const u = units.find((uu) => uu.id === `e${i}`)!;
       const name = text(this, x, y + 64, u.name, 20, COLORS.text).setOrigin(0.5, 0);
       const hp = this.add.graphics();
-      const roll = text(this, x, y - img.height - 10, '', 30, COLORS.accent).setOrigin(0.5, 1).setShadow(2, 2, '#000', 3, true, true);
-      const zone = this.add.zone(x, y + 50 - img.height / 2, img.width + 40, img.height + 40).setInteractive();
+      const roll = text(this, x, y + 50 - img.displayHeight - 14, '', 30, COLORS.accent).setOrigin(0.5, 1).setShadow(2, 2, '#000', 3, true, true);
+      const zone = this.add.zone(x, y + 50 - img.displayHeight / 2, img.displayWidth + 40, img.displayHeight + 40).setInteractive();
       zone.on('pointerup', (_p: Phaser.Input.Pointer, _x: number, _y: number, ev: Phaser.Types.Input.EventData) => {
         ev.stopPropagation();
         if (this.pickTarget && alive(u)) this.pickTarget(u.id);

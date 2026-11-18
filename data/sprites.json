@@ -1,15 +1,64 @@
 {
-  "_설명": "걸음 도트 시트 연결표. 원본(assets/user/)은 수정하지 않고, 실행 중에 칸을 잘라 배경을 지우고 화면 크기로 줄여 쓴다. grid=[열,행], rows=방향별 행 번호, walk=걷기 때 돌릴 열 순서, stand=서 있을 때 열. bg: auto면 칸 왼쪽 위 모서리 색을 배경으로 본다. tolerance: 배경으로 볼 색 차이(RGB 합).",
+  "_설명": "걸음 도트 시트 연결표. 원본(assets/user/)은 수정하지 않고, 실행 중에 칸을 잘라 배경을 지우고 화면 크기로 줄여 쓴다. grid=[열,행], rows=방향별 행 번호, walk=걷기 때 돌릴 열 순서, stand=서 있을 때 열. bg: auto면 칸 왼쪽 위 모서리 색을 배경으로 본다. tolerance: 배경으로 볼 색 차이(RGB 합). frames: 방향별로 [행, 열, 뒤집기(1)] 목록 — 시트의 옆모습 줄에 반대 방향 칸이 섞여 있어 바로잡는다 (왼쪽 줄 3번째 칸과 오른쪽 줄 1번째 칸이 반대 방향).",
   "displayHeight": 60,
   "sheets": {
     "klotho_coat": {
       "file": "assets/user/1000023036.png",
-      "grid": [3, 4],
-      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
-      "walk": [0, 1, 2, 1],
+      "grid": [
+        3,
+        4
+      ],
+      "rows": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      },
+      "walk": [
+        0,
+        1,
+        2,
+        1
+      ],
       "stand": 1,
       "bg": "auto",
-      "tolerance": 90
+      "tolerance": 90,
+      "frames": {
+        "left": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "right": [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            0
+          ]
+        ]
+      }
     },
     "klotho_home": {
       "same": "klotho_coat",
@@ -17,21 +66,119 @@
     },
     "anan": {
       "file": "assets/user/1000023037.png",
-      "grid": [3, 4],
-      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
-      "walk": [0, 1, 2, 1],
+      "grid": [
+        3,
+        4
+      ],
+      "rows": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      },
+      "walk": [
+        0,
+        1,
+        2,
+        1
+      ],
       "stand": 1,
       "bg": "auto",
-      "tolerance": 45
+      "tolerance": 45,
+      "frames": {
+        "left": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "right": [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            0
+          ]
+        ]
+      }
     },
     "hans": {
       "file": "assets/user/1000023035.png",
-      "grid": [3, 4],
-      "rows": { "down": 0, "left": 1, "right": 2, "up": 3 },
-      "walk": [0, 1, 2, 1],
+      "grid": [
+        3,
+        4
+      ],
+      "rows": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      },
+      "walk": [
+        0,
+        1,
+        2,
+        1
+      ],
       "stand": 1,
       "bg": "auto",
-      "tolerance": 45
+      "tolerance": 45,
+      "frames": {
+        "left": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "right": [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            2,
+            0
+          ]
+        ]
+      }
     }
   }
 }

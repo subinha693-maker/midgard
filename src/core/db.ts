@@ -28,6 +28,8 @@ export interface EnemyDef {
   name: string;
   shape: 'cat' | 'dog' | 'blob';
   color: string;
+  image?: string; // 적 그림 파일 (assets/user/…). 없으면 shape 실루엣
+  imageHeight?: number; // 전투 화면에서의 높이 px
   hp: number;
   근력: number;
   민첩: number;
