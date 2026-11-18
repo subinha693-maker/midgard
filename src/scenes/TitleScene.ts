@@ -21,7 +21,7 @@ export class TitleScene extends Phaser.Scene {
     const cont = button(this, (W - bw) / 2, H * 0.58 + 84, bw, 66, '이어하기', () => this.openLoad(), 26);
     cont.setEnabled(hasAnySave());
     this.add.existing(cont);
-    if (DEBUG) this.add.text(10, H - 30, '개발 모드 (?debug=1)', { fontSize: '16px', color: '#666' });
+    if (DEBUG) this.add.text(10, H - 30, '개발 모드', { fontSize: '16px', color: '#666' });
   }
 
   private newGame(): void {
