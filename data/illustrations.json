@@ -1,0 +1,13 @@
+{
+  "_설명": "일러스트 키 → 원본 파일. fit: contain(전체가 보이게, 여백 검정) | cover(화면을 채우고 넘치는 부분 자름). 어느 장면에 쓸지는 아직 미정 — 배치안 확정 후 원고의 @cg 키로 사용.",
+  "illustrations": {
+    "클로토_전신_코트": {
+      "file": "assets/user/1000023024.png",
+      "fit": "contain"
+    },
+    "아난_전신": {
+      "file": "assets/user/1000023025.png",
+      "fit": "contain"
+    }
+  }
+}
